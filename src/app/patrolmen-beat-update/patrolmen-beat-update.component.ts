@@ -16,7 +16,7 @@ import { OWL_DATE_TIME_FORMATS } from 'ng-pick-datetime';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { PateolmenUsernameDialogComponent } from '../beat-module/pateolmen-username-dialog/pateolmen-username-dialog.component';
 import { BeatServicesService } from '../services/beat-services.service';
-import { ToastrService } from 'ngx-toastr';
+// import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-patrolmen-beat-update',
@@ -38,6 +38,11 @@ import { ToastrService } from 'ngx-toastr';
 
 
 export class PatrolmenBeatUpdateComponent implements OnInit {
+  season = [
+    {value: "1", name: 'Summer'},
+    {value: "2", name: 'Rainy'},
+    {value: "3", name: 'Winter'}
+];
   private ngUnsubscribe: Subject<any> = new Subject();
   public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   @ViewChild(MatTable) table: MatTable<any> //used when add a row, see comment in function add()
@@ -56,41 +61,21 @@ export class PatrolmenBeatUpdateComponent implements OnInit {
   selected: any;
   result: any;
   patrolmenBeatForm: FormGroup;
-  keymenBeatForm: FormGroup;
   patrolmenFormArray: FormArray;
   patrolmentripList: FormArray;
-  keymentripList: FormArray;
   control: FormArray;
   patrolmenForm: boolean = true;
-  keymenForm: boolean = true;
   showBeatCard: boolean = true;
   season_id: any;
   existingData: any;
   beatData: any;
   existingKmStart: any;
   existingKmEnd: any;
-  existingStartTime: any;
-  existingEndTime: any;
-  existingBeatId1: any;
-  existingBeatId2: any;
-  existingBeatId3: any;
-  existingBeatId4: any;
-  existingBeatId5: any;
-  existingBeatId6: any;
-  existingBeatId7: any;
-  existingBeatId8: any;
-  existingtripmaster1: any;
-  existingtripmaster2: any;
-  existingtripmaster3: any;
-  existingtripmaster4: any;
-  existingtripmaster5: any;
-  existingtripmaster6: any;
-  existingtripmaster7: any;
-  existingtripmaster8: any;
-  existingSection: any;
   hierarchyData: any;
   parId: any;
   filteredDevices: any;
+  selectedDeviceArray: any = [];
+  duplicateValues: any;
 
   @ViewChildren(ArrowDivDirective) inputs: QueryList<ArrowDivDirective>
 
@@ -98,7 +83,7 @@ export class PatrolmenBeatUpdateComponent implements OnInit {
   constructor(private keyboardServ: KeyboardService,
     private fb: FormBuilder,
     private getDevice:GetDeviceService,
-    private beatService: BeatServicesService,private toastr: ToastrService,
+    private beatService: BeatServicesService,
     public dialog: MatDialog) { }
 
 
@@ -109,30 +94,15 @@ export class PatrolmenBeatUpdateComponent implements OnInit {
       'patrolmenFormArray': this.fb.array([])
     })
 
-    this.keymenBeatForm = this.fb.group({ 
-      'keymenformArray': this.fb.array([])
-    })
-
     this.patrolmentripList = this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray;
-    this.keymentripList = this.keymenBeatForm.get('keymenformArray') as FormArray;
 
-    for (let i=0;i<5;i++) {
+    for (let i=0;i<20;i++) {
       this.addRow();
     }
 
-    for (let i=0;i<3;i++) {
-      this.addRowForKeymen();
-    }
     this.currUser = JSON.parse(localStorage.getItem('currentUserInfo'));
     this.parId = this.currUser.usrId;
     this.GetRailwayDeptHierarchy(this.parId)
-    this.loading = true;
-    this.getDevice.getSectionName(this.currUser.usrId).takeUntil(this.ngUnsubscribe)
-    .subscribe(data => {
-      this.loading = false;
-      this.section = data;
-      // this.getDevices();
-    })
     this.loading = false;
     this.keyboardServ.keyBoard.subscribe(res => {
       this.move(res)
@@ -141,19 +111,7 @@ export class PatrolmenBeatUpdateComponent implements OnInit {
   hideSeekReportCard(){
     this.showBeatCard = !this.showBeatCard
   }
-  selectBeatFormType (data) {
-    // console.log("data", data)
-    if (data == "keymen") {
-      this.keymenForm = false;
-      this.patrolmenForm = true;
-    }
-    else if (data == "patrolmen") {
-      this.patrolmenForm = false;
-      this.keymenForm = true;
-    }
-  }
   get pf() { return this.patrolmenBeatForm.controls; }
-  get kf() { return this.keymenBeatForm.controls; }
 
 
   get getFormControls() {
@@ -171,24 +129,23 @@ export class PatrolmenBeatUpdateComponent implements OnInit {
       StudentId: ['', Validators.required],
       SectionName: ['', Validators.required],
       KmStart:  ['', [Validators.required, Validators.pattern(/^\d*([.\/]?\d+)$/)]],
-      // KmStart: new FormControl(this.existingData.kmStart, Validators.required),
       KmEnd: ['', [Validators.required, Validators.pattern(/^\d*([.\/]?\d+)$/)]],
-      start_time1: ['', [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
-      start_time2:['', [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
-      start_time3:['', [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
-      start_time4:['', [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
-      start_time5:['', [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
-      start_time6:['', [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
-      start_time7:['', [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
-      start_time8:['', [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
-      end_time1: ['', [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
-      end_time2:['', [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
-      end_time3:['', [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
-      end_time4:['', [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
-      end_time5:['', [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
-      end_time6:['', [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
-      end_time7:['', [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
-      end_time8:['', [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      start_time1: ['', [Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      start_time2:['', [Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      start_time3:['', [Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      start_time4:['', [Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      start_time5:['', [Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      start_time6:['', [Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      start_time7:['', [Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      start_time8:['', [Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      end_time1: ['', [Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      end_time2:['', [Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      end_time3:['', [Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      end_time4:['', [Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      end_time5:['', [Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      end_time6:['', [Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      end_time7:['', [Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      end_time8:['', [Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)]],
       BeatId1:['0'],
       BeatId2:['0'],
       BeatId3:['0'],
@@ -249,7 +206,7 @@ export class PatrolmenBeatUpdateComponent implements OnInit {
         }
         break;
       case "RIGTH":
-        console.log(index + rows, inputToArray.length)
+        // console.log(index + rows, inputToArray.length)
         if (index + rows < inputToArray.length)
           index += rows;
         else {
@@ -265,13 +222,13 @@ export class PatrolmenBeatUpdateComponent implements OnInit {
     }
   }
 
-
   GetRailwayDeptHierarchy(parentId) {
     this.devList = [];
     this.loading = true;
     this.beatService.GetRailwayDepHierarchy(parentId).subscribe((res)=> {
       this.loading = false;
       this.hierarchyData = res;
+      this.sectionName();
     },(err) => {
       this.loading = false;
         const dialogConfig = new MatDialogConfig();
@@ -283,11 +240,20 @@ export class PatrolmenBeatUpdateComponent implements OnInit {
     })
   }
 
+  sectionName() {
+    this.loading = true;
+    this.getDevice.getSectionName(this.currUser.usrId).takeUntil(this.ngUnsubscribe)
+    .subscribe(data => {
+      this.loading = false;
+      this.section = data;
+      // this.getDevices();
+    })
+  }
+
   getSelectedDevice(event) {
-    // this.selectedDeviceArray = [];
-    ((this.keymenBeatForm.get('keymenformArray') as FormArray)).reset();
-    ((this.keymenBeatForm.get('keymenformArray') as FormArray)).enable();
-    // console.log(event.hirachyParentId);
+    this.selectedDeviceArray = [];
+    ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray)).reset();
+    ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray)).enable();
     this.getDevices(event.hirachyParentId);
   }
 
@@ -296,7 +262,6 @@ export class PatrolmenBeatUpdateComponent implements OnInit {
     this.getDevice.getAllDeviceList(pId)
       .takeUntil(this.ngUnsubscribe)
       .subscribe((data: Array<DevicesInfo>) => {
-        console.log("data", data)
         if(data.length == 0){
           this.loading = false;
           const dialogConfig = new MatDialogConfig();
@@ -309,9 +274,6 @@ export class PatrolmenBeatUpdateComponent implements OnInit {
         else{
           this.devList = data;
           this.filteredDevices = this.devList.filter(p => String(p.name).startsWith('P/'));
-          // console.log("loh", this.devList)
-          // this.deviceFilter();
-          // this.GetRailwayPetrolmanTripsMaster()
           this.loading = false;
         }
       },
@@ -328,41 +290,66 @@ export class PatrolmenBeatUpdateComponent implements OnInit {
   }
 
   onChange(data, index: number) {
-    console.log("data", data)
     this.season_id = this.patrolmenBeatForm.get('seasonId').value;
-    
-    // console.log("season_id", this.season_id)
     this.beatService.getPatrolmenBeatByStdId(data.student_id, this.season_id)
     .takeUntil(this.ngUnsubscribe)
     .subscribe((data) => {
-      console.log("data",data)
-      this.existingKmStart = data[0].kmStart;
-      this.existingKmEnd = data[0].kmEnd;
-      this.existingStartTime = data[0].startTime;
-      this.existingEndTime = data[0].endTime;
-      this.existingBeatId1 = data[0].BeatId;
-      this.existingSection = data[0].sectionName;
-
-      // console.log("eciij",  this.existingData[0])
+      this.existingData = data;
+      if(this.existingData.kmStart &&  this.existingData.kmEnd) {
+        this.existingKmStart = this.existingData.kmStart.toString();
+        this.existingKmEnd = this.existingData.kmEnd.toString();
+      }
        ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('KmStart').patchValue(this.existingKmStart);
        ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('KmEnd').patchValue(this.existingKmEnd);
-       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('SectionName').patchValue(this.existingSection);
-       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('start_time1').patchValue(this.existingStartTime);
-       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('end_time1').patchValue(this.existingEndTime);
-       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('BeatId1').patchValue(this.existingBeatId1);
-       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('BeatId2').patchValue(this.existingBeatId2);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('SectionName').patchValue(this.existingData.sectionName);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('start_time1').patchValue(this.existingData.tripStartTime1);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('end_time1').patchValue(this.existingData.tripEndTime1);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('start_time2').patchValue(this.existingData.tripStartTime2);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('end_time2').patchValue(this.existingData.tripEndTime2);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('start_time3').patchValue(this.existingData.tripStartTime3);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('end_time3').patchValue(this.existingData.tripEndTime3);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('start_time4').patchValue(this.existingData.tripStartTime4);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('end_time4').patchValue(this.existingData.tripEndTime4);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('start_time5').patchValue(this.existingData.tripStartTime5);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('end_time5').patchValue(this.existingData.tripEndTime5);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('start_time6').patchValue(this.existingData.tripStartTime6);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('end_time6').patchValue(this.existingData.tripEndTime6);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('start_time7').patchValue(this.existingData.tripStartTime7);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('end_time7').patchValue(this.existingData.tripEndTime7);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('start_time8').patchValue(this.existingData.tripStartTime8);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('end_time8').patchValue(this.existingData.tripEndTime8);
+
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('BeatId1').patchValue(this.existingData.beatId1);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('BeatId2').patchValue(this.existingData.beatId2);
+        ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('BeatId3').patchValue(this.existingData.beatId3);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('BeatId4').patchValue(this.existingData.beatId4);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('BeatId5').patchValue(this.existingData.beatId5);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('BeatId6').patchValue(this.existingData.beatId6);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('BeatId7').patchValue(this.existingData.beatId7);
+       ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).get('BeatId8').patchValue(this.existingData.beatId8);
     })
+
+    this.selectedDeviceArray.push(data.student_id)
+    let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
+    this.duplicateValues = findDuplicates(this.selectedDeviceArray)
+    for(var i = 0; i < this.selectedDeviceArray.length; i++) {
+      for(var j=0; j < this.duplicateValues.length;j++) {
+        if(this.selectedDeviceArray[i] == this.duplicateValues[j]) {
+          ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).disable();
+          // this.toastRef = this.toastr.error('Duplicate selection of device', 'Error', {
+          //   timeOut: 20000,
+          // });
+          // alert("duplicate")
+          break;
+        } 
+        else {
+          // this.toastr.clear(this.toastRef.ToastId);
+          ((this.patrolmenBeatForm.get('patrolmenFormArray') as FormArray).at(index) as FormGroup).enable();
+        }
+      }
+    }
   }
   
-  GetRailwayPetrolmanTripsMaster() {
-    this.loading = true;
-    this.getDevice.GetRailwayPetrolmanTripsMaster(this.currUser.usrId).subscribe(data => {
-      this.loading = false;
-      this.tripData = data;
-    })  
-    this.loading = false;
-  }
-
    // open dialog of add patrolman trip master
    openMasterDialog(): void {
     let dialogRef = this.dialog.open(AddTripMasterComponent, {
@@ -372,11 +359,19 @@ export class PatrolmenBeatUpdateComponent implements OnInit {
   }
 
   submit() {
-    console.log("data", this.patrolmenBeatForm.value)
+    if(this.patrolmenBeatForm.invalid){
       const dialogConfig = new MatDialogConfig();
-      dialogConfig.width = '350px';
+      //pass data to dialog
       dialogConfig.data = {
-        // maxWidth: '600px',
+        hint: 'invalidForm'
+      };
+      const dialogRef = this.dialog.open(HistoryNotFoundComponent, dialogConfig)
+    }
+    else {
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.width = '700px';
+      dialogConfig.height = '250px';
+      dialogConfig.data = {
         data: this.patrolmenBeatForm.value,
     };
     let dialogRef = this.dialog.open(PateolmenUsernameDialogComponent, dialogConfig)
@@ -384,48 +379,10 @@ export class PatrolmenBeatUpdateComponent implements OnInit {
       this.result = dialogResult;
     });
   }
-
-  // keymen block starts
-  deviceImei: any;
-  deviceName: any;
-  devices: any;
-  onSelection(event) {
-    console.log(event)
-    this.deviceImei = event.imei_no;
-    this.deviceName = event.name;
-    // console.log("this.deviceImei", this.deviceImei)
-    // console.log("this.deviceName", this.deviceName)
   }
 
-  createKeymenBeat (): FormGroup {
-    return this.fb.group({
-      DeviceName: [''],
-      Section: new FormControl(''),
-      kmStart: new FormControl(this.deviceImei),
-      kmEnd: new FormControl(this.deviceName),
-    })
-  }
-
-  addRowForKeymen() {
-    const controls =  this.keymenBeatForm.get('keymenformArray') as FormArray;
-    controls.push(this.createKeymenBeat());
-  }
-  
-  addextraRowsForKeymen() {
-    this.keymentripList.push(this.createKeymenBeat());
-    this.second.renderRows()
-  }
-
-  get getKeymenFormControls() {
-    const controls = this.keymenBeatForm.get('keymenformArray') as FormArray;
-    return controls;
-  }
-
-  deleteRow(index: number) {
-    // this.patrolmenFormArray.removeAt(index);
-    const control =  this.keymenBeatForm.get('keymenformArray') as FormArray;
-    if (index > 0)
-      control.removeAt(index);
-    this.second.renderRows();
+  ngOnDestroy(): void{
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

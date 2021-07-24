@@ -19,7 +19,6 @@ export class BeatServicesService {
     };
      let params = new HttpParams()
     .set('KeymanBeatData',JSON.stringify(daata))
-    // console.log(params)
     var res = this.http.post(this.logServ.apiUrl + 'AdminDashboardServiceApi/SaveKeymanBeatInBulk', params, options) 
     return res .pipe(
       //retry upto 3 times after getting error from server
@@ -37,9 +36,7 @@ export class BeatServicesService {
     };
      let params = new HttpParams()
     .set('parentId', parId)
-    // console.log("params", params)
     var res = this.http.post(this.logServ.apiUrl+ 'AdminDashboardServiceApi/GetKeymanExistingBeatByParent', params, options)
-    // console.log("res", res)
     return res .pipe(
       //retry upto 3 times after getting error from server
       retryWhen((error:any) => {
@@ -56,9 +53,7 @@ export class BeatServicesService {
     };
      let params = new HttpParams()
     .set('parentId', parId)
-    // console.log("params", params)
     var res = this.http.post(this.logServ.apiUrl + 'AdminDashboardServiceApi/GetKeymanExistingBeatToApproveByParent', params, options)
-    // console.log("res", res)
     return res .pipe(
       //retry upto 3 times after getting error from server
       retryWhen((error:any) => {
@@ -71,7 +66,6 @@ export class BeatServicesService {
 
   savePatrolmenBeats (data: any) {
     var data = JSON.parse(data);
-    console.log("data", data)
     let options = {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
     };
@@ -81,10 +75,9 @@ export class BeatServicesService {
     .set('userLoginId', data.userLoginId)
     .set('contactNo', data.contactNo)
     .set('seasonId', data.seasonId)
-    .set('emailId', data.contactNo)
+    .set('emailId', data.email)
     .set('patrolmenFormArray', JSON.stringify(data.patrolmenFormArray))
-    // console.log(params)
-    var res = this.http.post(this.localApi + 'AdminDashboardServiceApi/AddPatrolmanBeatBulk', params, options) 
+    var res = this.http.post(this.logServ.apiUrl + 'AdminDashboardServiceApi/AddPatrolmanBeatBulk', params, options) 
     return res .pipe(
       //retry upto 3 times after getting error from server
       retryWhen((error:any) => {
@@ -97,16 +90,16 @@ export class BeatServicesService {
 
 
   getPatrolmenBeatByStdId (stdId, seasonId) {
-    // var data = JSON.parse(data);
-    // console.log("data", data)
+    var userInfo = JSON.parse(localStorage.getItem('currentUserInfo'));
+    var userLoginId = userInfo.usrId;
     let options = {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
     };
     let params = new HttpParams()
-    .set('StudentId', stdId)
-    .set('SeasonId', seasonId)
-    // console.log(params)
-    var res = this.http.post(this.localApi + 'AdminDashboardServiceApi/GetPatrolMenBeatAPI', params, options) 
+    .set('studentId', stdId)
+    .set('seasonId', seasonId)
+    .set('userLoginId', userLoginId)
+    var res = this.http.post(this.logServ.apiUrl + 'AdminDashboardServiceApi/GetPatrolManExistingBeatByStudentAPI', params, options) 
     return res .pipe(
       //retry upto 3 times after getting error from serve
       retryWhen((error:any) => {
@@ -117,20 +110,20 @@ export class BeatServicesService {
     ) 
   }
 
-  getPatrolmenExistingBeatByParent(parId) {
+  getPatrolmenExistingBeatByParent(parId, seasonId) {
     let options = {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
     };
      let params = new HttpParams()
     .set('parentId', parId)
-    .set('seasonId', '1')
-    console.log("params", params)
-    var res = this.http.post(this.localApi + 'AdminDashboardServiceApi/GetPatrolmanExistingBeatToApproveByParent', params, options)
-    // console.log("res", res)
+    .set('seasonId', seasonId)
+    var res = this.http.post(this.logServ.apiUrl + 'AdminDashboardServiceApi/GetPatrolmanExistingBeatToApproveByParentForUser', params, options)
     return res .pipe(
       //retry upto 3 times after getting error from server
       retryWhen((error:any) => {
         return interval(5000).pipe(
+
+
           mergeMap(count => count == 3 ? throwError("Giving up") : of(count))
         )}
       )
@@ -147,9 +140,7 @@ export class BeatServicesService {
     .set('beatId', '0')
     .set('userLoginId', parId)
 
-    // console.log("params", params)
     var res = this.http.post(this.logServ.apiUrl + 'AdminDashboardServiceApi/GetKeymanExistingBeat', params, options)
-    // console.log("res", res)
     return res .pipe(
       //retry upto 3 times after getting error from server
       retryWhen((error:any) => {
@@ -173,9 +164,7 @@ export class BeatServicesService {
    .set('parentId', pId)
    .set('hirachyParentId', '0')
    .set('userLoginId', userLoginId)
-   // console.log("params", params)
-   var res = this.http.post(this.localApi + 'AdminDashboardServiceApi/GetRailwayDeptHierarchy', params, options) 
-   // console.log("res", res)
+   var res = this.http.post(this.logServ.apiUrl + 'AdminDashboardServiceApi/GetRailwayDeptHierarchy', params, options) 
    return res .pipe(
      //retry upto 3 times after getting error from server
      retryWhen((error:any) => {
@@ -185,6 +174,41 @@ export class BeatServicesService {
      )
    ) 
  }
+
+  //  get all patrolmen beat
+  getPatrolmenExistingBeat(parId, seasonId) {
+    let options = {
+      headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
+    };
+    let params = new HttpParams()
+    .set('parentId', parId)
+    .set('seasonId', seasonId)
+    var res = this.http.post(this.logServ.apiUrl + 'AdminDashboardServiceApi/GetPatrolMenExistingBeatByParentAPI', params, options)
+    return res .pipe(
+      //retry upto 3 times after getting error from server
+      retryWhen((error:any) => {
+        return interval(5000).pipe(
+          mergeMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )}
+      )
+    ) 
+  }
+
+  //  get all patrolmen beat
+ getVideoLink() {
+  let options = {
+    headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
+  };
+  var res = this.http.get(this.logServ.apiUrl + 'UserServiceAPI/GetVideoLinksForDemo', options)
+  return res .pipe(
+    //retry upto 3 times after getting error from server
+    retryWhen((error:any) => {
+      return interval(5000).pipe(
+        mergeMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )}
+    )
+  ) 
+}
 }
 
 

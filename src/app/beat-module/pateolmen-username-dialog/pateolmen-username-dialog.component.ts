@@ -4,7 +4,6 @@ import { MatDialog, MatDialogConfig, MatDialogRef,MAT_DIALOG_DATA} from '@angula
 import { ngxLoadingAnimationTypes } from 'ngx-loading';
 import { HistoryNotFoundComponent } from '../../dialog/history-not-found/history-not-found.component';
 import { BeatServicesService } from '../../services/beat-services.service';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { PatrolmenConfirmDialogComponent } from '../patrolmen-confirm-dialog/patrolmen-confirm-dialog.component';
 
 @Component({
@@ -32,21 +31,17 @@ export class PateolmenUsernameDialogComponent implements OnInit {
     this.parId = this.currUser.usrId;
 
     this.receivedData = this.data.data;
-    // console.log(this.receivedData);
-    //  this.keymenUserBeatForm = this.fb.group({ 
-    //   'name': ['', Validators.required],
-    //   'contactNo': ['', Validators.required],
-    //   'checkbox': ['', Validators.required]
-    // })
-
     this.patrolmenUserBeatForm = this.fb.group({ 
       'name': ['', Validators.required],
-      'contactNo': ['', Validators.required],
+      'contactNo': ['', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]],
       'checkbox': ['', Validators.required],
-      'email': ['', Validators.required]
+      'email': ['',[ Validators.required, Validators.email,Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]]
     })
   }
- 
+
+   public hasError = (controlName: string, errorName: string) =>{
+    return this.patrolmenUserBeatForm.controls[controlName].hasError(errorName);
+  }
 
   onDismiss(): void {
     // Close the dialog, return false

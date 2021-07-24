@@ -1,0 +1,41 @@
+.beat-card-two {
+  width: 95%;
+  margin: 0 auto;
+  padding: 10px 10px 0px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 80px;
+  z-index: 1;
+  }
+.content-section{
+  height: 93%;
+  padding-top: 9%;
+}
+.beat-card-content-two{
+  display: row;
+}
+table {
+  width: 100%;
+}
+td.mat-column-DeviceName, td.mat-column-KmStart, td.mat-column-KmEnd, td.mat-column-SectionName,td.mat-column-status, td.mat-column-Trip-1, td.mat-column-Trip-2, td.mat-column-Trip-3,td.mat-column-Trip-4,td.mat-column-Trip-5, td.mat-column-Trip-6,td.mat-column-Trip-7,td.mat-column-Trip-8
+{
+  border-right: 1px solid #e0e0e0;
+  padding-left: 2px;
+  padding-right: 2px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+}
+  
+th.mat-column-DeviceName, th.mat-column-KmStart,
+th.mat-column-KmEnd, th.mat-column-SectionName,  th.mat-column-status,  th.mat-column-Trip-1, th.mat-column-Trip-2, th.mat-column-Trip-3,th.mat-column-Trip-4,th.mat-column-Trip-5, th.mat-column-Trip-6,th.mat-column-Trip-7,th.mat-column-Trip-8
+{
+   border-right: 1px solid #e0e0e0;
+   padding-left: 2px;
+   padding-right: 2px;
+   text-align: center;
+   background-color: grey;
+   color: white;
+   font-size: 15px;
+   font-weight: 500;
+}

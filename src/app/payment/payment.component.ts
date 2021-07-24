@@ -53,9 +53,6 @@ export class PaymentComponent implements OnInit {
   }
 
   applyFilter(filterValue: string) {
-    //console.log(filterValue)
-  /*   this.paymentDetails.filter = filterValue.trim().toLowerCase();
-    console.log(this.paymentDetails.filter) */
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
     this.paymentDetails.filter = filterValue;

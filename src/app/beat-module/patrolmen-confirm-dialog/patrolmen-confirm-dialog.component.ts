@@ -29,18 +29,20 @@ export class PatrolmenConfirmDialogComponent implements OnInit {
   }
   onConfirm(): void {
     // Close the dialog, return true
+    // console.log(this.data)
     this.loading = true;
    this.beatService.savePatrolmenBeats(this.data).takeUntil(this.ngUnsubscribe)
     .subscribe((data: Message)=>{
-      console.log("data", data)
-      if(data == null){
+      // console.log("data", data)
+      if(data.error == "false"){
         this.dialogRef.close();
           const dialogConfig = new MatDialogConfig();
           //pass data to dialog
           dialogConfig.data = {
-            hint: 'removeRows'
+            hint: 'beatAdded'
           };
           const dialogRef = this.dialog.open(HistoryNotFoundComponent, dialogConfig)
+          this.router.navigate(['/', 'patrolmen-beat-status']);
         }
        else if(data.error == "true"){
         this.dialogRef.close();
@@ -58,10 +60,8 @@ export class PatrolmenConfirmDialogComponent implements OnInit {
           const dialogConfig = new MatDialogConfig();
           //pass data to dialog
           dialogConfig.data = {
-            hint: 'beatAdded'
+            hint: 'beatNotAdded'
           };
-        const dialogRef = this.dialog.open(HistoryNotFoundComponent, dialogConfig)
-        // this.router.navigate(['/', 'patrolmen-beat-status']);
         }
     })
   }
@@ -70,4 +70,10 @@ export class PatrolmenConfirmDialogComponent implements OnInit {
     // Close the dialog, return false
     this.dialogRef.close('0');
   }
+
+  ngOnDestroy(): void{
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
 }

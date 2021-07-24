@@ -26,3 +26,21 @@ export interface  getApprovalBeats{
     startTime: number,
     studentId: number
 }
+
+export interface getPatrolmenBeats{
+    deviceName: string,
+    kmEnd: string,
+    kmStart: string,
+    sectionName: string,
+    seasonId: string,
+    studentId: number,
+    tripId: number,
+    ApprovedDate: string,
+        tripTime :{
+            endTime: number,
+            startTime: number,
+            fk_TripMasterId: number,
+            isApprove: boolean,
+            tripId: number
+        },
+}

@@ -146,7 +146,7 @@ export class HistoryNotFoundComponent implements OnInit {
     }
     else if(this.msg == 'removeRows') {
       this.iconName = 'sentiment_satisfied_alt'
-      this.message = 'Please remove extra rows !!' 
+      this.message = 'Please remove empty rows !!' 
     }
     else if(this.msg == 'noTripsAvailable') {
       this.iconName = 'sentiment_satisfied_alt'
@@ -154,11 +154,19 @@ export class HistoryNotFoundComponent implements OnInit {
     }
     else if(this.msg == 'beatNotFound') {
       this.iconName = 'sentiment_very_dissatisfied'
-      this.message = 'Beat not found !!' 
+      this.message = 'Sorry.. Beat not found !!' 
     }
     else if(this.msg == 'NoModuleFound') {
       this.iconName = 'sentiment_very_dissatisfied'
       this.message = 'Sorry.. No modules available!!' 
+    }
+    else if(this.msg == 'invalidForm') {
+      this.iconName = 'sentiment_very_dissatisfied'
+      this.message = 'Please remove empty rows!!' 
+    }
+    else if(this.msg == 'NoExceptionReportListFound') {
+      this.iconName = 'sentiment_very_dissatisfied'
+      this.message = 'Sorry.. No Report List found!!' 
     }
     else{
       this.iconName = 'sentiment_very_dissatisfied'

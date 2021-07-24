@@ -84,6 +84,7 @@ export class ReportComponent implements OnInit {
   deviceListShow: boolean = true;
   devSignalInfo: boolean = false;
   summaryRepoInfo: boolean = false;
+  showselectExpectionReport: boolean = false;
   selectedImei_no: string;
   chkExpiry: number;
   selectedDeviceName: string;
@@ -125,6 +126,7 @@ export class ReportComponent implements OnInit {
   DateRangeException: Array<any> = [];
   showExceptionRepoType: boolean = false;
   selectedExceptionRepo: string = '';
+  selectedExceptionReport: any;
   uniqueTimestamp: Array<any> = [];
   uniqueDevices: Array<string> = [];
   batterySignalInfo: any;
@@ -147,7 +149,8 @@ export class ReportComponent implements OnInit {
   repoDateforPatrolmen: any;
   showSearchField: boolean = true;
   selReportTypeModule: any;
-  exceptionRepoList = ['Low Battery Exception', 'Beat Not Covered Exception', 'Off Device Exception', 'Overspeed Exception']
+  exceptionRepoList = ['Low Battery Exception', 'Beat Not Covered Exception', 'Off Device Exception', 'Overspeed Exception'];
+  exceptionReportList : any;
   //spinner
   public loading:boolean = false;
   public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
@@ -176,6 +179,7 @@ export class ReportComponent implements OnInit {
     this.reportForm = this.fb.group({
       reportType: ['', Validators.required],
       exceptionReportType: [''],
+      selectExceptionReportType: [''],
       selectedDevice: [''],
       startDate: new FormControl(moment().subtract(1, 'months').startOf('day')),
       endDate: new FormControl(moment().subtract(1, 'days').endOf('day')),
@@ -252,6 +256,7 @@ export class ReportComponent implements OnInit {
     const reportDt = this.reportForm.get('reportDate');
     const deviceNameList = this.reportForm.get('deviceName')
     const exceptionRepoType = this.reportForm.get('exceptionReportType')
+    const exceptionReportTypeList = this.reportForm.get('selectExceptionReportType')
     const allSumReportDate = this.reportForm.get('allReportDate')
     this.selectedReportType = this.f.reportType.value.Module;
     this.deviceListShow = true;
@@ -265,6 +270,7 @@ export class ReportComponent implements OnInit {
     this.showExceptionError = false;
     this.showExceptionRepoType = false;
     this.devSignalInfo = false;
+    this.showselectExpectionReport = false;
     this.maxDate = new Date(this.d.getFullYear(),this.d.getMonth(),this.d.getDate()-1);
     this.reportForm.patchValue({startDate: (moment().subtract(1, 'months').startOf('day')) })
     this.reportForm.patchValue({reportDate: (moment().subtract(1, 'days').startOf('day')) })
@@ -280,6 +286,7 @@ export class ReportComponent implements OnInit {
         reportDt.clearValidators();
         exceptionRepoType.clearValidators();
         allSumReportDate.clearValidators();
+        exceptionReportTypeList.clearValidators();
         break;
       }
       case 'CurrentDeviceStatus': {
@@ -292,6 +299,7 @@ export class ReportComponent implements OnInit {
         reportDt.clearValidators();
         exceptionRepoType.clearValidators();
         deviceNameList.clearValidators();
+        exceptionReportTypeList.clearValidators();
         allSumReportDate.clearValidators();
         break;
       }
@@ -321,6 +329,7 @@ export class ReportComponent implements OnInit {
         TimeMin.clearValidators();
         exceptionRepoType.clearValidators();
         deviceNameList.clearValidators();
+        exceptionReportTypeList.clearValidators();
         allSumReportDate.clearValidators();
         break;
       }
@@ -350,6 +359,7 @@ export class ReportComponent implements OnInit {
         TimeMin.clearValidators();
         exceptionRepoType.clearValidators();
         deviceNameList.clearValidators();
+        exceptionReportTypeList.clearValidators();
         allSumReportDate.clearValidators();
         break;
       }
@@ -362,6 +372,7 @@ export class ReportComponent implements OnInit {
         reportDt.clearValidators();
         exceptionRepoType.clearValidators();
         deviceNameList.clearValidators();
+        exceptionReportTypeList.clearValidators();
         allSumReportDate.clearValidators();
         break;
       }
@@ -374,6 +385,7 @@ export class ReportComponent implements OnInit {
         reportDt.clearValidators();
         exceptionRepoType.clearValidators();
         deviceNameList.clearValidators();
+        exceptionReportTypeList.clearValidators();
         allSumReportDate.clearValidators();
         break;
       }
@@ -391,6 +403,7 @@ export class ReportComponent implements OnInit {
         TimeMin.clearValidators();
         exceptionRepoType.clearValidators();
         deviceNameList.clearValidators();
+        exceptionReportTypeList.clearValidators();
         break;
       }
       case 'Patrolman_Report_Summary': {
@@ -421,6 +434,7 @@ export class ReportComponent implements OnInit {
         exceptionRepoType.clearValidators();
         deviceNameList.clearValidators();
         allSumReportDate.clearValidators();
+        exceptionReportTypeList.clearValidators();
         break;
       }
       case 'EmpAttendnce': {
@@ -436,6 +450,7 @@ export class ReportComponent implements OnInit {
         exceptionRepoType.clearValidators();
         deviceNameList.clearValidators();
         allSumReportDate.clearValidators();
+        exceptionReportTypeList.clearValidators();
         break;
       }
       case 'MonthlyMileageReport': {
@@ -449,6 +464,7 @@ export class ReportComponent implements OnInit {
         reportDt.clearValidators();
         exceptionRepoType.clearValidators();
         deviceNameList.clearValidators();
+        exceptionReportTypeList.clearValidators();
         allSumReportDate.clearValidators();
         break;
       }
@@ -466,6 +482,7 @@ export class ReportComponent implements OnInit {
         exceptionRepoType.clearValidators();
         deviceNameList.clearValidators();
         allSumReportDate.clearValidators();
+        exceptionReportTypeList.clearValidators();
         break;
       }
       case 'GeofenceHistory': {
@@ -481,6 +498,7 @@ export class ReportComponent implements OnInit {
         TimeMin.clearValidators();
         exceptionRepoType.clearValidators();
         deviceNameList.clearValidators();
+        exceptionReportTypeList.clearValidators();
         allSumReportDate.clearValidators();
         break;
       }
@@ -496,6 +514,7 @@ export class ReportComponent implements OnInit {
         TimeMin.clearValidators();
         exceptionRepoType.clearValidators();
         deviceNameList.clearValidators();
+        exceptionReportTypeList.clearValidators();
         break;
       }
       case 'NearByLevelCrossingInspection': {
@@ -510,6 +529,7 @@ export class ReportComponent implements OnInit {
         TimeMin.clearValidators();
         exceptionRepoType.clearValidators();
         deviceNameList.clearValidators();
+        exceptionReportTypeList.clearValidators();
         break;
       }
       case 'NearBySEJInspection': {
@@ -524,17 +544,42 @@ export class ReportComponent implements OnInit {
         TimeMin.clearValidators();
         exceptionRepoType.clearValidators();
         deviceNameList.clearValidators();
+        exceptionReportTypeList.clearValidators();
         allSumReportDate.clearValidators();
         break;
       }
       case 'ExceptionReport': {
         // this.reportDetails = "Exception report for today will be available after 6pm."
+        exceptionReportTypeList.clearValidators();
+        this.loading = true;
+        this.reportServ.getExceptionReportMasterList()
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe((data: Array<any>) => {
+          // console.log("data", data)
+          if(data.length==0){
+            this.loading = false;
+            const dialogConfig = new MatDialogConfig();
+            //pass data to dialog
+            dialogConfig.data = {
+              hint: 'NoExceptionReportListFound'
+            };
+            const dialogRef = this.dialog.open(HistoryNotFoundComponent, dialogConfig)
+          }
+          else{  
+            this.exceptionReportList = data;
+            this.loading = false;
+          }
+          this.loading = false;
+        })
+       
+        this.showselectExpectionReport = true;
         this.reportDetails ="";
         this.maxDate = new Date();
         this.tripReportShow = false;
         this.AllSummaryReportShow = false;
         this.patrolmanSummaryReportShow = false;
         reportDt.setValidators([Validators.required]);
+        exceptionReportTypeList.setValidators([Validators.required]);
         selDev.clearValidators();
         startDt.clearValidators();
         endDt.clearValidators();
@@ -556,6 +601,7 @@ export class ReportComponent implements OnInit {
         TimeMin.clearValidators();
         reportDt.clearValidators();
         deviceNameList.clearValidators();
+        exceptionReportTypeList.clearValidators();
         allSumReportDate.clearValidators();
         break;
       }
@@ -567,6 +613,7 @@ export class ReportComponent implements OnInit {
     reportDt.updateValueAndValidity();
     TimeMin.updateValueAndValidity();
     deviceNameList.updateValueAndValidity();
+    exceptionReportTypeList.updateValueAndValidity();
   }//end reportRequirement method
 
   getSelectedDevice($event){
@@ -585,6 +632,10 @@ export class ReportComponent implements OnInit {
 
   getExceptionRepoType(event){
     this.selectedExceptionRepo = event.value;
+  }
+
+  getSelectedExceptionRepoType(event) {
+    this.selectedExceptionReport = event.value;
   }
 
   getTotlDistance(kms: number){
@@ -1514,7 +1565,8 @@ export class ReportComponent implements OnInit {
         //console.log('exception report')
         let repoDate = this.f.reportDate.value._d.getTime()/1000;
         let parentId = this.currentUser.usrId;
-        this.reportServ.getExceptionReport(repoDate,parentId)
+        let reportType = this.reportForm.get('selectExceptionReportType').value;
+        this.reportServ.getExceptionReport(repoDate,parentId,reportType)
           .takeUntil(this.ngUnsubscribe)
           .subscribe((data: Array<any>) => {
             // console.log("data", data)

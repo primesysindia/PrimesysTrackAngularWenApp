@@ -50,7 +50,7 @@ export class ModuleListService {
     .set('UserId', userId)
     .set('RoleId',roleId)
 
-    return this.http.post(this.localApi +'ParentAPI/GetUserUtilityAPI', params, options)
+    return this.http.post(this.loginServ.apiUrl +'ParentAPI/GetUserUtilityAPI', params, options)
     .pipe(
       //retry upto 3 times after getting error from server
       retryWhen((error:any) => {

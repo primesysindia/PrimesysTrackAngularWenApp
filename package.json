@@ -52,7 +52,7 @@
     "ngx-moment": "^3.3.0",
     "ngx-order-pipe": "^2.0.2",
     "ngx-scrollbar": "^2.2.0",
-    "ngx-toastr": "^10.1.0",
+    "pdfmake": "^0.1.58",
     "rxjs": "~6.2.0",
     "rxjs-compat": "^6.3.3",
     "snazzy-info-window": "^1.1.1",

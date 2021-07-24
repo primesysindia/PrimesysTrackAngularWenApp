@@ -178,7 +178,24 @@ export class ReportService {
     )
   }
 
-  getExceptionReport(repoDate,parentId){
+  getExceptionReportMasterList(){
+    let options = {
+      headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
+    };
+
+    return this.http.get(this.logServ.apiUrl +'UserServiceAPI/GetReportTypeFilterMaster', options)
+    .pipe(
+      //retry upto 3 times after getting error from server
+      retryWhen((error:any) => {
+        return interval(5000).pipe(
+          mergeMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )}
+      )
+    )
+    .pipe(map((res) => res))
+  }
+
+  getExceptionReport(repoDate,parentId, reportType){
     let options = {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
     };
@@ -186,8 +203,10 @@ export class ReportService {
     let params = new HttpParams()
     .set('Timestamp', repoDate)
     .set('ParentId', parentId)
+    .set('ReportType', reportType)
+    // console.log(params)
 
-    return this.http.post(this.logServ.apiUrl+'UserServiceAPI/getExceptionReportFile', params, options)
+    return this.http.post(this.logServ.apiUrl +'UserServiceAPI/GetExceptionReportFileByFilter', params, options)
     .pipe(
       //retry upto 3 times after getting error from server
       retryWhen((error:any) => {

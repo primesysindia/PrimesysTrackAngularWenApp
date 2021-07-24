@@ -8,14 +8,29 @@
       </mat-card-header>
       </div>
     </div>
-    
+    <form [formGroup]="patrolmenBeatForm">
+    <div class="row">
+      <div class="col-md-3">
+        <label><small>Please Select Season</small></label>
+        <ng-select placeholder="Please Select Season" [items]="season" [virtualScroll]="true" bindLabel="viewValue" bindValue="value" formControlName="seasonId" (change)="onSelection($event)">
+        </ng-select>
+      </div>
+
+      <div class="col-md-9">
+        <button class="btn-download float-right" matTooltip="Download in PDF" (click)="generatePdf()">
+          <i class="material-icons">cloud_download</i>
+        </button>
+      </div>
+    </div>
+  </form>
+
     <mat-card-content  style="background: ghostwhite; ">
       <div class="example-container mat-elevation-z8">
-        <table mat-table [dataSource]="dataSource">
+        <!-- <table mat-table [dataSource]="dataSource">
 
-          <ng-container matColumnDef="DeviceId">
-            <th mat-header-cell *matHeaderCellDef> Device Imei </th>
-            <td mat-cell *matCellDef="let row"> {{row.studentId}} </td>
+          <ng-container matColumnDef="DeviceName">
+            <th mat-header-cell *matHeaderCellDef> Device Name </th>
+            <td mat-cell *matCellDef="let row"> {{row.deviceName}} </td>
           </ng-container>
 
           <ng-container matColumnDef="KmStart">
@@ -36,7 +51,14 @@
           <ng-container matColumnDef="VerificationDate">
             <th mat-header-cell *matHeaderCellDef > Verification Date</th>
             <td mat-cell *matCellDef="let row"> 
-              <!-- {{row.SectionName}}  -->
+              <ng-container *ngIf="row.ApprovedDate;else noApprovedDate">
+                <span>
+                  {{row.ApprovedDate | date}}
+                </span>
+                </ng-container>
+                <ng-template #noApprovedDate>
+                <ng-container>  -- </ng-container>
+              </ng-template>
             </td>
           </ng-container>
 
@@ -58,7 +80,232 @@
 
           <tr mat-header-row *matHeaderRowDef="tableHeader;"></tr>
           <tr mat-row *matRowDef="let row; columns: tableHeader;"></tr>
+        </table> -->
+        
+        <table mat-table [dataSource]="dataSource">
+
+          <ng-container matColumnDef="DeviceName">
+            <th mat-header-cell *matHeaderCellDef> Device Name </th>
+            <td mat-cell *matCellDef="let row"> {{row.deviceName}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="KmStart">
+            <th mat-header-cell *matHeaderCellDef> Km Start </th>
+            <td mat-cell *matCellDef="let row"> {{row.kmStart}} </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="KmEnd">
+            <th mat-header-cell *matHeaderCellDef >Km End</th>
+            <td mat-cell *matCellDef="let row"> {{row.kmEnd}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="SectionName">
+              <th mat-header-cell *matHeaderCellDef >Section Name</th>
+              <td mat-cell *matCellDef="let row"> {{row.sectionName}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="Trip-1">
+            <th mat-header-cell *matHeaderCellDef >Trip-1</th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container *ngIf="row.tripTime[0] && row.tripTime[0].isApprove == true; else TripNotApproved" >
+                <span style="color: green; font-weight: 500;" matTooltip="Approved">
+                  {{row.tripTime[0].startTime.slice(0,-3)}}-{{row.tripTime[0].endTime.slice(0,-3)}}
+                </span>
+              </ng-container>
+              <ng-template #TripNotApproved>
+                <ng-container *ngIf="row.tripTime[0] && row.tripTime[0].isApprove == false; else noTrip" >
+                  <span style="color: red; font-weight: 500;" matTooltip="Not Approved">
+                    {{row.tripTime[0].startTime.slice(0,-3)}}-{{row.tripTime[0].endTime.slice(0,-3)}}
+                  </span>
+                </ng-container>
+              </ng-template>
+              <ng-template #noTrip>
+                <span> -- </span>
+              </ng-template>
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="Trip-2">
+            <th mat-header-cell *matHeaderCellDef >Trip-2</th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container *ngIf="row.tripTime[1] && row.tripTime[1].isApprove == true; else TripNotApproved1" >
+                <span style="color: green; font-weight: 500;" matTooltip="Approved">
+                  {{row.tripTime[1].startTime.slice(0,-3)}}-{{row.tripTime[1].endTime.slice(0,-3)}}
+                </span>
+              </ng-container>
+              <ng-template #TripNotApproved1>
+                <ng-container *ngIf="row.tripTime[1] && row.tripTime[1].isApprove == false; else noTrip1" >
+                  <span style="color: red; font-weight: 500;" matTooltip="Not Approved">
+                    {{row.tripTime[1].startTime.slice(0,-3)}}-{{row.tripTime[1].endTime.slice(0,-3)}}
+                  </span>
+                </ng-container>
+              </ng-template>
+              <ng-template #noTrip1>
+                <span> -- </span>
+              </ng-template>
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="Trip-3">
+            <th mat-header-cell *matHeaderCellDef >Trip-3</th>
+            <td mat-cell *matCellDef="let row">  
+              <ng-container *ngIf="row.tripTime[2] && row.tripTime[2].isApprove == true; else TripNotApproved2" >
+                <span style="color: green; font-weight: 500;" matTooltip="Approved">
+                  {{row.tripTime[2].startTime.slice(0,-3)}}-{{row.tripTime[2].endTime.slice(0,-3)}}
+                </span>
+              </ng-container>
+              <ng-template #TripNotApproved2>
+                <ng-container *ngIf="row.tripTime[2] && row.tripTime[2].isApprove == false; else noTrip2" >
+                  <span style="color: red; font-weight: 500;" matTooltip="Not Approved">
+                    {{row.tripTime[2].startTime.slice(0,-3)}}-{{row.tripTime[2].endTime.slice(0,-3)}}
+                  </span>
+                </ng-container>
+              </ng-template>
+              <ng-template #noTrip2>
+                <span> -- </span>
+              </ng-template>
+             </td>
+          </ng-container>
+          
+          <ng-container matColumnDef="Trip-4">
+            <th mat-header-cell *matHeaderCellDef >Trip-4</th>
+            <td mat-cell *matCellDef="let row"> 
+              <ng-container *ngIf="row.tripTime[3] && row.tripTime[3].isApprove == true; else TripNotApproved3" >
+                <span style="color: green; font-weight: 500;" matTooltip="Approved">
+                  {{row.tripTime[3].startTime.slice(0,-3)}}-{{row.tripTime[3].endTime.slice(0,-3)}}
+                </span>
+              </ng-container>
+              <ng-template #TripNotApproved3>
+                <ng-container *ngIf="row.tripTime[3] && row.tripTime[3].isApprove == false; else noTrip3" >
+                  <span style="color: red; font-weight: 500;" matTooltip="Not Approved">
+                    {{row.tripTime[3].startTime.slice(0,-3)}}-{{row.tripTime[3].endTime.slice(0,-3)}}
+                  </span>
+                </ng-container>
+              </ng-template>
+              <ng-template #noTrip3>
+                <span> -- </span>
+              </ng-template>
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="Trip-5">
+            <th mat-header-cell *matHeaderCellDef >Trip-5</th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container *ngIf="row.tripTime[4] && row.tripTime[4].isApprove == true; else TripNotApproved4" >
+                <span style="color: green; font-weight: 500;" matTooltip="Approved">
+                  {{row.tripTime[4].startTime.slice(0,-3)}}-{{row.tripTime[4].endTime.slice(0,-3)}}
+                </span>
+              </ng-container>
+              <ng-template #TripNotApproved4>
+                <ng-container *ngIf="row.tripTime[4] && row.tripTime[4].isApprove == false; else noTrip4" >
+                  <span style="color: red; font-weight: 500;" matTooltip="Not Approved">
+                    {{row.tripTime[4].startTime.slice(0,-3)}}-{{row.tripTime[4].endTime.slice(0,-3)}}
+                  </span>
+                </ng-container>
+              </ng-template>
+              <ng-template #noTrip4>
+                <span> -- </span>
+              </ng-template>
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="Trip-6">
+            <th mat-header-cell *matHeaderCellDef >Trip-6</th>
+            <td mat-cell *matCellDef="let row"> 
+              <ng-container *ngIf="row.tripTime[5] && row.tripTime[5].isApprove == true; else TripNotApproved5" >
+                <span style="color: green; font-weight: 500;" matTooltip="Approved">
+                  {{row.tripTime[5].startTime.slice(0,-3)}}-{{row.tripTime[5].endTime.slice(0,-3)}}
+                </span>
+              </ng-container>
+              <ng-template #TripNotApproved5>
+                <ng-container *ngIf="row.tripTime[5] && row.tripTime[5].isApprove == false; else noTrip5" >
+                  <span style="color: red; font-weight: 500;" matTooltip="Not Approved">
+                    {{row.tripTime[5].startTime.slice(0,-3)}}-{{row.tripTime[5].endTime.slice(0,-3)}}
+                  </span>
+                </ng-container>
+              </ng-template>
+              <ng-template #noTrip5>
+                <span> -- </span>
+              </ng-template>
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="Trip-7">
+            <th mat-header-cell *matHeaderCellDef >Trip-7</th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container *ngIf="row.tripTime[6] && row.tripTime[6].isApprove == true; else TripNotApproved6" >
+                <span style="color: green; font-weight: 500;" matTooltip="Approved">
+                  {{row.tripTime[6].startTime.slice(0,-3)}}-{{row.tripTime[6].endTime.slice(0,-3)}}
+                </span>
+              </ng-container>
+              <ng-template #TripNotApproved6>
+                <ng-container *ngIf="row.tripTime[6] && row.tripTime[6].isApprove == false; else noTrip6" >
+                  <span style="color: red; font-weight: 500;" matTooltip="Not Approved">
+                    {{row.tripTime[6].startTime.slice(0,-3)}}-{{row.tripTime[6].endTime.slice(0,-3)}}
+                  </span>
+                </ng-container>
+              </ng-template>
+              <ng-template #noTrip6>
+                <span> -- </span>
+              </ng-template>
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="Trip-8">
+            <th mat-header-cell *matHeaderCellDef >Trip-8</th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container *ngIf="row.tripTime[7] && row.tripTime[7].isApprove == true; else TripNotApproved7" >
+                <span style="color: green; font-weight: 500;" matTooltip="Approved">
+                  {{row.tripTime[7].startTime.slice(0,-3)}}-{{row.tripTime[7].endTime.slice(0,-3)}}
+                </span>
+              </ng-container>
+              <ng-template #TripNotApproved7>
+                <ng-container *ngIf="row.tripTime[7] && row.tripTime[7].isApprove == false; else noTrip7" >
+                  <span style="color: red; font-weight: 500;" matTooltip="Not Approved">
+                    {{row.tripTime[7].startTime.slice(0,-3)}}-{{row.tripTime[7].endTime.slice(0,-3)}}
+                  </span>
+                </ng-container>
+              </ng-template>
+              <ng-template #noTrip7>
+                <span> -- </span>
+              </ng-template>
+          </td>
+          </ng-container>
+
+          <ng-container matColumnDef="VerificationDate">
+            <th mat-header-cell *matHeaderCellDef > Verification Date</th>
+            <td mat-cell *matCellDef="let row"> 
+              <ng-container *ngIf="row.ApprovedDate;else noApprovedDate">
+                <span>
+                  {{row.ApprovedDate | date}}
+                </span>
+                </ng-container>
+                <ng-template #noApprovedDate>
+                <ng-container>  -- </ng-container>
+              </ng-template>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Approve-Status </th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container *ngIf="row.tripTime[0] && row.tripTime[0].isApprove == true;else notApproved;">
+                <span style="color: darkgreen; font-weight: 500;" matTooltip="Approved">
+                  Approved
+                </span>
+              </ng-container>
+              <ng-template #notApproved>
+                <ng-container *ngIf="row.tripTime[0] && row.tripTime[0].isApprove == false">
+                  Not Approved
+                </ng-container>
+              </ng-template>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="tableHeader;"></tr>
+          <tr mat-row *matRowDef="let row; columns: tableHeader;"></tr>
       </table>
+        <mat-paginator [pageSizeOptions]="[15,25,50,100,500]"></mat-paginator>
       </div>
     </mat-card-content>
   </mat-card>

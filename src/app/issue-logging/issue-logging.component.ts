@@ -133,7 +133,6 @@ export class IssueLoggingComponent implements OnInit {
     this.getDevice.getAllDeviceList(usrId)
       .takeUntil(this.ngUnsubscribe)
       .subscribe((data: Array<DevicesInfo>) => {
-      //  console.log("data", data)
         if(data.length == 0){
           this.loading = false;
           const dialogConfig = new MatDialogConfig();
@@ -166,7 +165,6 @@ export class IssueLoggingComponent implements OnInit {
   deviceFilter() {
     // load the initial device list
     this.filteredDevices.next(this.devList);
-    // console.log("filteredlist", this.filteredDevices);
 
     // listen for search field value changes
     this.deviceFilterCtrl.valueChanges
@@ -223,19 +221,14 @@ export class IssueLoggingComponent implements OnInit {
       "loginName": this.userLoginName,
     } 
   }
-  console.log(inputData);
   this.liveLocServ.sendMsg(inputData);
   this.liveLocServ.messages.takeUntil(this.ngUnsubscribe)
   .subscribe(res => {
-    console.log("res",res)
     this.response = res;
     this.responseData = JSON.parse(this.response.data);
     this.message = this.responseData.msg;
-    console.log("message",this.message)
   })
   }
- 
-
  
   getDeviceInfoAndIssue(std_id, imei_no) {
     this.beatInfo = [];
@@ -246,9 +239,7 @@ export class IssueLoggingComponent implements OnInit {
       this.loading = false;
       this.showDevDetails = true;
       this.data = data;
-      // console.log("data", this.data)
       this.beatInfo = this.data.beatInfoList;
-      // console.log("beatInfo", this.beatInfo)
       
       },
       (error: any) => { 
@@ -272,12 +263,10 @@ export class IssueLoggingComponent implements OnInit {
       let std_id= {
         student_id: this.student
       }
-      // console.log("else condition", this.addIssueForm.value)
       this.loading = true;
       this.issueService.saveIssue(Object.assign(std_id, this.addIssueForm.value))
         .takeUntil(this.ngUnsubscribe)
         .subscribe((data: Message)=>{
-          // console.log("data", data)
           if(data.error == "true"){
             this.loading = false;
             const dialogConfig = new MatDialogConfig();

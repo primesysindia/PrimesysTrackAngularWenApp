@@ -1,0 +1,115 @@
+.content-section{
+    padding-top: 9%;
+    height: 93%;
+}
+@media screen and (max-width:1399px){
+    .content-section{
+        padding-top: 8%;
+    }
+}
+@media screen and (max-width:1199px){
+    .content-section{
+        padding-top: 8%;
+    }
+  
+}
+@media screen and (max-width:1140px){
+    .content-section{
+        padding-top: 9%;
+    }
+}
+@media screen and (max-width:690px){
+    .content-section{
+        padding-top: 13%;
+    }
+}
+@media screen and (max-width:500px){
+    .show-card{
+        margin-top: 1rem;
+    }
+}
+@media screen and (max-width:414px){
+    .content-section{
+        padding-top: 17%;
+    }
+}
+body{
+    background:#eee; 
+    margin-top:10px;
+    }
+    
+    .ibox {
+      clear: both;
+      margin-bottom: 25px;
+      margin-top: 0;
+      padding: 0;
+    }
+    .ibox.collapsed .ibox-content {
+      display: none;
+    }
+    .ibox.collapsed .fa.fa-chevron-up:before {
+      content: "\f078";
+    }
+    .ibox.collapsed .fa.fa-chevron-down:before {
+      content: "\f077";
+    }
+    .ibox:after,
+    .ibox:before {
+      display: table;
+    }
+    .ibox-title {
+      -moz-border-bottom-colors: none;
+      -moz-border-left-colors: none;
+      -moz-border-right-colors: none;
+      -moz-border-top-colors: none;
+      background-color: #ffffff;
+      border-color: #e7eaec;
+      border-image: none;
+      border-style: solid solid none;
+      border-width: 3px 0 0;
+      color: inherit;
+      margin-bottom: 0;
+      padding: 14px 15px 7px;
+      min-height: 48px;
+    }
+    .ibox-title h5 {
+        display: inline-block;
+        font-size: 14px;
+        margin: 0 0 7px;
+        padding: 0;
+        text-overflow: ellipsis;
+        /* float: left; */
+    }
+    .ibox-tools a {
+        cursor: pointer;
+        margin-left: 5px;
+        color: #c4c4c4;
+    }
+    .ibox-tools {
+        display: block;
+        float: none;
+        margin-top: 0;
+        position: relative;
+        padding: 0;
+        text-align: right;
+    }
+    .ibox-content {
+      background-color: #ffffff;
+      color: inherit;
+      padding: 15px 20px 20px 20px;
+      border-color: #e7eaec;
+      border-image: none;
+      border-style: solid solid none;
+      border-width: 1px 0;
+    }
+    .ibox-footer {
+      color: inherit;
+      border-top: 1px solid #e7eaec;
+      font-size: 90%;
+      background: #ffffff;
+      padding: 10px 15px;
+    }
+    video {
+      width: 100% !important;
+      height: auto !important;
+    }

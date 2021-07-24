@@ -10,10 +10,8 @@
       <div class="myMatOptions">
       <mat-form-field>
         <mat-select formControlName="utilityType" backdropClass="repo-list" placeholder="Select Utility Type"  required disableOptionCentering>
-          <!-- <mat-option value="beat">ALl Keymen Beat</mat-option> -->
           <mat-option *ngFor="let ulist of utlilityList" [value]="ulist">{{ulist.utilityTitle}}</mat-option>
         </mat-select>
-        <!-- <mat-error *ngIf="f.reportType.hasError('required')">Please Choose Report Type</mat-error> -->
       </mat-form-field>
       <button class="submit-btn" mat-button mat-raised-button [disabled]="!utilityForm.valid">Go to Module</button>
       </div>

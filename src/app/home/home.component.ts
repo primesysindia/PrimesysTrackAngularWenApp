@@ -139,6 +139,7 @@ export class HomeComponent implements OnInit {
   showBeatBtn: boolean = true;
   showbeatDialog: boolean = false;
   beatInfo: any;
+  allDevicesLocation: Array<any> = []
   @ViewChild('liveLocMarker') liveLocMarker: ElementRef;
   //css
   screenHeight:any;
@@ -358,13 +359,11 @@ export class HomeComponent implements OnInit {
       if(!this.rdpsDataAvail) {
         if ((isChrome = navigator.userAgent.indexOf("Chrome"))!=-1) {
             browserName = "Chrome";
-            // console.log("function callled")
             localStorage.setItem('browserName',browserName);
             //call service to get feature address
             this.liveLocServ.getFeatureAddress()
               .takeUntil(this.ngUnsubscribe)
               .subscribe((res: Array<FeatureAddress>) => {
-              // console.log("rdps",res)
               this.loginServ.setLoggedIn(true);
               this.loading = false;
               if(res.length > 0){
@@ -376,7 +375,6 @@ export class HomeComponent implements OnInit {
                     featureData.push(result)
                     })
                   })
-                  // console.log("featureData", featureData)
                   this.db = (<any>window).openDatabase('RDPS', '', 'RDPS data', 2 * 1024 * 1024)
                   this.db.transaction((txSync)=> {
                     try{
@@ -561,7 +559,6 @@ export class HomeComponent implements OnInit {
       .subscribe(res => {
       this.loading = true;
       this.liveTrack = JSON.parse(res.data);
-      // console.log("location res", this.liveTrack)
       let speed = 0
       if(this.liveTrack.event == 'current_location'){
         this.selectedItem = this.selDevice;
@@ -592,7 +589,6 @@ export class HomeComponent implements OnInit {
           }
         this.liveTrack.data.lan = longitude;
         this.liveTrack.data.lat = latitude;  
-        //console.log(this.liveTrack)
         let d: Date = new Date();
         let timeDiff = (parseInt(d.getTime()/1000+"")) - this.liveTrack.data.timestamp; 
         if(this.selDeviceType == 'Car'){
@@ -765,11 +761,9 @@ export class HomeComponent implements OnInit {
           this.getFeatureAddressSignal().then(
             (res:any) => {
               
-              // console.log("res",res)
               for(let i=0; i< res.rows.length; i++){
                 this.sortedFeatureAdrs.push(res.rows[i])
               }
-              // console.log("sorted",this.sortedFeatureAdrs)
               if(res.rows.length>0){
                 this.showFeatureAddress = true;
                 this.smallestDistance = this.distancePole({lat: this.liveTrack.data.lat, lng: this.liveTrack.data.lan},res.rows)
@@ -777,11 +771,9 @@ export class HomeComponent implements OnInit {
                   this.locationKmPole = ""+(+res.rows[this.smallestDistance.position].kiloMeter + ((+res.rows[this.smallestDistance.position].distance + 
                                         this.smallestDistance.minDist)*0.001)).toFixed(4)
                   this.smallDistance = this.smallestDistance.minDist.toFixed(3) + " meter from " + res.rows[this.smallestDistance.position].featureDetail;                     
-                  // console.log("if", this.smallDistance)
                 }
                 else{
                   this.smallDistance = this.smallestDistance.minDist.toFixed(3) + " meter from " + res.rows[this.smallestDistance.position].featureDetail;
-                  // console.log("else", this.smallDistance)
                 }
               }
             },
@@ -960,15 +952,8 @@ export class HomeComponent implements OnInit {
   setInfoWindow() {
     let $event;
     var unit, speed;
-    // commented for USA user 24-Feb-2021
-    // if(this.USAUser){
-    //   unit = ' miles/hr'
-    //   speed = (this.liveTrack.data.speed*0.621371).toFixed(2)
-    // }
-    // else{
       unit = ' Km/hr'
       speed = this.liveTrack.data.speed
-      // console.log("speed", speed)
     // }
     if(this.currUser.accSqliteEnable == 0)
       $event = 'mouseover'
@@ -1082,7 +1067,6 @@ export class HomeComponent implements OnInit {
     this.liveLocServ.getSnapToRoad(loc1,loc2)
       .takeUntil(this.ngUnsubscribe)
       .subscribe((data: any) =>{
-        //console.log(data)
         if(data.snappedPoints.length == 0){
           return
         }
@@ -1166,7 +1150,7 @@ export class HomeComponent implements OnInit {
       this.getDevice.getAllDeviceLocation(this.currUser.usrId)
         .takeUntil(this.ngUnsubscribe)
         .subscribe((data: Array<AllDevicesLocation>) => {
-          // console.log(data)
+          this.allDevicesLocation.push(data)
           this.totalDevices = data.length; 
           if(data.length==0){
             this.loading =false;
@@ -1178,7 +1162,6 @@ export class HomeComponent implements OnInit {
             const dialogRef = this.dialog.open(HistoryNotFoundComponent, dialogConfig)
           }
           else{
-            this.map.setCenter({ lat: +data[0].lat, lng: +data[0].lan });
             this.onDeviceCnt = 0;
             this.offDeviceCnt = 0;
             this.stoppageDevCnt = 0;
@@ -1219,7 +1202,6 @@ export class HomeComponent implements OnInit {
                     icon = '../assets/gray-marker.png';
                     device.liveStatusImg = '../assets/liveStatusExpire.svg';
                   }
-
                   // today's on devices
                   else if(res.timestamp > todays_time) {
                     this.todayOnDeviceCnt++;
@@ -1367,7 +1349,6 @@ export class HomeComponent implements OnInit {
       this.getDevice.getAllDeviceList(this.currUser.usrId)
         .takeUntil(this.ngUnsubscribe)
         .subscribe((data: Array<DevicesInfo>) => {
-          // console.log("data", data)
           if(data.length == 0){
             this.loading = false;
             const dialogConfig = new MatDialogConfig();
@@ -1425,7 +1406,6 @@ export class HomeComponent implements OnInit {
         "student_id": +stud_id
       };
       this.liveLocServ.sendMsg(inputData);
-      // console.log("input", inputData)
       this.selDevice = devName;
     }
     else{
@@ -1445,7 +1425,6 @@ export class HomeComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     this.historyServ.getBeatInfoOfDevices(this.selectedDeviceSId).
     subscribe((res)=> {
-      // console.log(res)
       dialogConfig.width = '400px';
       dialogConfig.height = '280px';
       dialogConfig.data = res;
@@ -1470,12 +1449,10 @@ export class HomeComponent implements OnInit {
         "student_id": +stud_id
       };
       this.liveLocServ.sendMsg(inputData);
-      // console.log(inputData);
       this.selDevice = devName;
   }
 
   ngOnDestroy(): void{
-    //console.log('ngOnDestroy called')
     this.wsServ.closeConnection()
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();

@@ -493,7 +493,6 @@ export class HistoryComponent implements OnInit {
       this.history.getTrackHistory(startDateTime,endDateTime,imei)
         .takeUntil(this.ngUnsubscribe)
         .subscribe((data: HistoryInfoData) =>{
-            // console.log("data", data);
             this.trackHistory = data.historyInfo;
             if(data.historyDataSize == 0){
               this.loading = false;
@@ -589,7 +588,6 @@ export class HistoryComponent implements OnInit {
                   lng: parseFloat(this.markers[this.markers.length-1].lng)
                 }
               ]
-              //console.log(this.markers)
               if(this.markers.length>1){
                 //For getting RDPS data
                 if(this.currUser.accSqliteEnable == 0){
@@ -739,7 +737,6 @@ export class HistoryComponent implements OnInit {
     .subscribe((data: BatteryInfoData) =>{
       this.batteryInfo = data;
       this.batInfo = this.batteryInfo;
-      // console.log("this", this.batInfo)
     })
     
   }
@@ -756,7 +753,6 @@ export class HistoryComponent implements OnInit {
     this.batChartLegend = true;
     this.batChartType = 'line';
     this.batChartLabel = this.getBatDateTime();
-    // console.log("chart label", this.batChartLabel)
     this.batChartColor = [
       { //blue
         backgroundColor: 'rgba(148,159,177,0.2)',
@@ -825,7 +821,6 @@ export class HistoryComponent implements OnInit {
     this.netChartLegend = true;
     this.netChartType = 'line';
     this.netChartLabel = this.getNetDateTime();
-    // console.log("chart label", this.netChartLabel)
     this.netChartColor = [
       { //blue
         backgroundColor: 'rgba(148,159,177,0.2)',
@@ -901,7 +896,6 @@ export class HistoryComponent implements OnInit {
 
 
   startAnimation(){
-    //console.log('In start animation')
     this.isPlaying = true
     this.pauseAnimation = false;
     if(this.clickCnt == 0 || this.cnt == this.locationCnt-1){
@@ -1060,7 +1054,6 @@ export class HistoryComponent implements OnInit {
       this.loading = false;
       this.showbeatDialog = !this.showbeatDialog;
       this.beatInfo =  data;
-      console.log("data", this.beatInfo);
     })
   }
 

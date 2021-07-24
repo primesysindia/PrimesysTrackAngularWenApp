@@ -1,0 +1,15 @@
+.card{
+    width: 95%;
+    margin: 0 auto;
+    padding: 10px 10px 0px;
+}
+.utility-card-content{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.content-section{
+    height: 93%;
+    padding-top: 8%;
+}

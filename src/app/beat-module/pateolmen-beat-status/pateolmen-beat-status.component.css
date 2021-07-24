@@ -9,22 +9,26 @@ table {
   font-size: 18px;
   /* text-align: center !important; */
 }
-td.mat-column-DeviceId, td.mat-column-KmStart,
- td.mat-column-KmEnd, td.mat-column-SectionName,  td.mat-column-status, th.mat-column-VerificationDate
+td.mat-column-DeviceName, td.mat-column-KmStart,
+ td.mat-column-KmEnd, td.mat-column-SectionName,  td.mat-column-status, td.mat-column-Trip-1, td.mat-column-Trip-2, td.mat-column-Trip-3,td.mat-column-Trip-4,td.mat-column-Trip-5, td.mat-column-Trip-6,td.mat-column-Trip-7,td.mat-column-Trip-8, td.mat-column-VerificationDate
  {
   border-right: 1px solid #e0e0e0;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 2px;
+  padding-right: 2px;
   text-align: center;
+  font-size: 15px;
+  font-weight: 500;
 }
 
-th.mat-column-DeviceId, th.mat-column-KmStart,
-th.mat-column-KmEnd, th.mat-column-SectionName,  th.mat-column-status, th.mat-column-VerificationDate
+th.mat-column-DeviceName, th.mat-column-KmStart,
+th.mat-column-KmEnd, th.mat-column-SectionName, th.mat-column-status,   th.mat-column-Trip-1, th.mat-column-Trip-2, th.mat-column-Trip-3,th.mat-column-Trip-4,th.mat-column-Trip-5, th.mat-column-Trip-6,th.mat-column-Trip-7,th.mat-column-Trip-8, th.mat-column-VerificationDate
 {
- border-right: 1px solid #e0e0e0;
- padding-left: 10px;
- padding-right: 10px;
- text-align: center;
- background-color: grey;
- color: white;
+  border-right: 1px solid #e0e0e0;
+  padding-left: 2px;
+  padding-right: 2px;
+  text-align: center;
+  background-color: grey;
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
 }

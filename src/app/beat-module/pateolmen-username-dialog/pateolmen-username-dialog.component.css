@@ -1,0 +1,12 @@
+button.mat-button.mat-raised-button .submit-btn{
+    /* border-radius:1rem; */
+    padding: 0 2rem;
+    background-color: #205c69!important;
+    color:white!important;
+}
+button.mat-button.mat-raised-button[disabled]{
+    /* border-radius:1rem; */
+    padding: 0 2rem;
+    background-color: #e6e8e9!important;
+    color:rgb(90, 88, 88)!important;
+}

@@ -1,0 +1,35 @@
+<div class="content-section">
+    <h4 style="text-align: center;">DEMONSTRATION VIDEOS </h4>
+  <div class="container">
+    <div class="row" *ngFor="let data of responseData">
+         <!-- <div class="row"> -->
+    <div class="col-md-8">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h4>{{data.Title}}</h4>
+            </div>
+            <div class="ibox-content">
+                <video width="320" height="240" controls>
+                    <source [src]="data.VideoLink" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h4>Video description</h4>
+            </div>
+            <div class="ibox-content profile-content">
+                <h5>{{data.SubTitle}}</h5>
+                <p> {{data.VideoDescription}} </p>
+               
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    
+    <ngx-loading [show]="loading" [config]="{ animationType: ngxLoadingAnimationTypes.wanderingCubes, backdropBorderRadius: '3px'}"></ngx-loading>
+</div>

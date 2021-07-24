@@ -69,7 +69,6 @@ export class LoginComponent implements OnInit {
       } else {
         this.loading = true;
         this.loggedUser = data;
-        //console.log(this.loggedUser);
         localStorage.setItem('currentUserInfo',JSON.stringify(this.loggedUser));
         this.loginServ.apiServerUrl = this.loggedUser.socketUrl;
         this.loginServ.setLoggedIn(true);

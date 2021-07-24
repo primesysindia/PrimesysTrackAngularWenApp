@@ -73,6 +73,10 @@ export class UtilityModuleComponent implements OnInit {
       this.router.navigate(['/all-keymen-beats']);
       break;
     } 
+    case 'BeatWisePatrolMan': {
+      this.router.navigate(['/all-patrolmen-beat']);
+      break;
+    }
     default: {
       const dialogConfig = new MatDialogConfig();
           //pass data to dialog
@@ -83,22 +87,6 @@ export class UtilityModuleComponent implements OnInit {
       break;
     }
   }
-  //   if(this.utilityName = 1){
-  //     console.log("this.keymen")
-  //     // this.router.navigate(['/keymen-beats']);
-  //   }
-  //   else if(this.utilityName = 2){
-  //     console.log("this.f")
-  //     this.router.navigate(['/all-keymen-beats']);
-  //   }
-  //   else{
-  //     const dialogConfig = new MatDialogConfig();
-  //     //pass data to dialog
-  //     dialogConfig.data = {
-  //       hint: 'NoModuleFound'
-  //     };
-  //     const dialogRef = this.dialog.open(HistoryNotFoundComponent, dialogConfig)
-  //   }
   }
 }
  

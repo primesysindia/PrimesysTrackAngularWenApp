@@ -15,7 +15,7 @@ import { BeatServicesService } from '../services/beat-services.service';
 import { ConfirmDialogComponent } from '../beat-module/confirm-dialog/confirm-dialog.component';
 import { UsernameDialogComponent } from '../beat-module/username-dialog/username-dialog.component';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+// import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -64,7 +64,7 @@ export class KeymenBeatUpdateComponent implements OnInit {
     private fb: FormBuilder,
     private getDevice:GetDeviceService,
     private beatService: BeatServicesService,
-    public dialog: MatDialog, private toastr: ToastrService,
+    public dialog: MatDialog, 
     private router: Router) { }
 
   ngOnInit() {
@@ -80,15 +80,6 @@ export class KeymenBeatUpdateComponent implements OnInit {
     this.parId = this.currUser.usrId;
     this.GetRailwayDeptHierarchy(this.parId)
 
-    this.loading = true;
-    this.getDevice.getSectionName(this.currUser.usrId).takeUntil(this.ngUnsubscribe)
-    .subscribe(data => {
-      this.loading = false;
-      this.section = data;
-      // console.log("sec", this.section)
-      // this.getDevices();
-    })
-    this.loading = false;
     this.keyboardServ.keyBoard.subscribe(res => {
       this.move(res)
     })
@@ -139,6 +130,7 @@ export class KeymenBeatUpdateComponent implements OnInit {
     this.beatService.GetRailwayDepHierarchy(parentId).subscribe((res)=> {
       this.loading = false;
       this.hierarchyData = res;
+      this.getSectionName();
     },(err) => {
       this.loading = false;
         const dialogConfig = new MatDialogConfig();
@@ -150,11 +142,19 @@ export class KeymenBeatUpdateComponent implements OnInit {
     })
   }
 
+  getSectionName() {
+    this.loading = true;
+    this.getDevice.getSectionName(this.currUser.usrId).takeUntil(this.ngUnsubscribe)
+    .subscribe(data => {
+      this.loading = false;
+      this.section = data;
+    })
+    this.loading = false;
+  }
   getSelectedDevice(event) {
     this.selectedDeviceArray = [];
     ((this.keymenBeatForm.get('keymenformArray') as FormArray)).reset();
     ((this.keymenBeatForm.get('keymenformArray') as FormArray)).enable();
-    // console.log(event.hirachyParentId);
     this.getDevices(event.hirachyParentId);
   }
 
@@ -164,7 +164,6 @@ export class KeymenBeatUpdateComponent implements OnInit {
     this.getDevice.getAllDeviceList(pId)
       .takeUntil(this.ngUnsubscribe)
       .subscribe((data: Array<DevicesInfo>) => {
-        // console.log("data", data)
         if(data.length == 0){
           this.loading = false;
           const dialogConfig = new MatDialogConfig();
@@ -201,7 +200,6 @@ export class KeymenBeatUpdateComponent implements OnInit {
     this.beatService.getKeymenExistingBeat(this.parId, data.student_id)
     .takeUntil(this.ngUnsubscribe)
     .subscribe((data) => {
-      // console.log("data", data)
       if(data) {
         this.existingKmStart = data[0].KmStart.toString();
         this.existingKmEnd = data[0].KmEnd.toString();
@@ -227,6 +225,8 @@ export class KeymenBeatUpdateComponent implements OnInit {
           // this.toastRef = this.toastr.error('Duplicate selection of device', 'Error', {
           //   timeOut: 20000,
           // });
+          // alert("duplicate")
+          break;
         } 
         else {
           // this.toastr.clear(this.toastRef.ToastId);
@@ -257,9 +257,9 @@ export class KeymenBeatUpdateComponent implements OnInit {
     this.second.renderRows()
   }
 
-  public hasErrorInSetPeriod = (controlName: string, errorName: string) =>{
-    return this.keymenBeatForm.controls[controlName].hasError(errorName);
-  }
+  // public hasErrorInSetPeriod = (controlName: string, errorName: string) =>{
+  //   return this.keymenBeatForm.controls[controlName].hasError(errorName);
+  // }
 
   get getKeymenFormControls() {
     const controls = this.keymenBeatForm.get('keymenformArray') as FormArray;
@@ -279,7 +279,6 @@ export class KeymenBeatUpdateComponent implements OnInit {
   }
 
   submit() {
-    // console.log(this.keymenBeatForm.value)
     if(this.keymenBeatForm.invalid) {
       return
     }

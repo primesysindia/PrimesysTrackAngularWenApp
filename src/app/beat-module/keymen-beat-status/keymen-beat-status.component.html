@@ -1,13 +1,17 @@
 <div class="content-section">
   <mat-card class="example-card">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-6">
       <mat-card-header> 
         <mat-card-title>KEYMAN BEAT STATUS</mat-card-title>
       </mat-card-header>
       </div>
+      <div class="col-md-6">
+        <button class="btn-download float-right" matTooltip="Download in PDF" (click)="generatePdf()">
+          <i class="material-icons">cloud_download</i>
+        </button>
+      </div>
     </div>
-    
     <mat-card-content  style="background: ghostwhite; margin-bottom: 40px;">
       <div class="example-container mat-elevation-z8">
         <table mat-table [dataSource]="dataSource">
@@ -67,7 +71,7 @@
 
           <tr mat-header-row *matHeaderRowDef="tableHeader;"></tr>
           <tr mat-row *matRowDef="let row; columns: tableHeader;"></tr>
-      </table>
+        </table>
       <mat-paginator [pageSizeOptions]="[15,25,50,100,500]"></mat-paginator>
       </div>
     </mat-card-content>

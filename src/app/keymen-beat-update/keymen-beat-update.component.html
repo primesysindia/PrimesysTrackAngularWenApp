@@ -25,7 +25,7 @@
                   </button>
                 </div>
                 <div class="col-md-6">
-                  <button mat-button mat-raised-button [disabled]="keymenBeatForm.invalid" (click)="submit()"  style="background: #09a0a0; color: white;">
+                  <button mat-button mat-raised-button [disabled]="keymenBeatForm.invalid" (click)="submit()"  style="background: #09a0a0; color: white;" matTooltip="Remove extra empty rows to enable the button">
                     Save
                   </button>
 
@@ -38,40 +38,46 @@
           </div>
         </mat-card-content>
       </mat-card>
-      
     
       <mat-card class="beat-card-three">
         <mat-card-content class="beat-card-content-three">
-          <p style="margin-bottom: 10px; float:right;"><mat-error>*Please remove extra empty rows before submission.</mat-error></p>
+          <div class="row">
+            <div class="col-md-6" style="margin-bottom: 10px;"><mat-error>*Please remove extra empty rows before submission.</mat-error></div>
+            <div class="col-md-6" style="margin-bottom: 10px; float:right;"><a style="color: red; float:right;" [routerLink]="['/demo-videos']">
+            Need Help?</a></div>
+          </div>
           <div class="example-container mat-elevation-z8">
             <table mat-table #second [dataSource]="getKeymenFormControls.controls">
               <ng-container matColumnDef="DeviceName">
-                <th  mat-header-cell *matHeaderCellDef> Device Name </th>
+                <th  mat-header-cell *matHeaderCellDef> Device Name <button matSuffix mat-icon-button matTooltip="Select Device"> <mat-icon style="font-size:14px;">help_desk</mat-icon></button></th>
                 <td mat-cell *matCellDef="let element; let i = index;">
-                    <ng-select class="auto-grow" [items]="filteredDevices" [virtualScroll]="true" bindLabel="name" bindValue="student_id" [formControl]="element.get('studentId')" (change)="onChange($event, i)" style="width: 90%;">
-                    </ng-select>
-                    <mat-error *ngIf="element.get('studentId')?.invalid">  
-                      <div *ngIf="element.get('studentId').errors?.required && (element.get('studentId').dirty || element.get('studentId').touched)">This is required.</div>  
-                    </mat-error> 
+                  <ng-select class="auto-grow" [items]="filteredDevices" [virtualScroll]="true" bindLabel="name" bindValue="student_id" [formControl]="element.get('studentId')" (change)="onChange($event, i)" style="width: 90%;">
+                  </ng-select>
+                  <mat-error *ngIf="element.get('studentId')?.invalid">  
+                    <div *ngIf="element.get('studentId').errors?.required && (element.get('studentId').dirty || element.get('studentId').touched)">This is required.</div>  
+                  </mat-error> 
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="Section">
-                <th mat-header-cell *matHeaderCellDef > Section Name </th>
+                <th mat-header-cell *matHeaderCellDef > Section Name  <button matSuffix mat-icon-button matTooltip="Select Section Name"> <mat-icon style="font-size:14px;">help_desk</mat-icon></button></th>
                 <td mat-cell *matCellDef="let element">
-                    <ng-select [items]="section" [virtualScroll]="true" bindLabel="name" bindValue="id" [formControl]="element.get('sectionName')" style="width: 90%;padding-left: 15px;">
-                    </ng-select>
-                    <!-- <input [formControl]="element.get('sectionName')" placeholder="section"> -->
-                    <mat-error *ngIf="element.get('sectionName')?.invalid">  
-                      <div *ngIf="element.get('sectionName').errors?.required && (element.get('sectionName').dirty || element.get('sectionName').touched)">This is required.</div>  
-                    </mat-error> 
-                    </td>
+                  <ng-select [items]="section" [virtualScroll]="true" bindLabel="name" bindValue="id" [formControl]="element.get('sectionName')" style="width: 90%;padding-left: 15px;">
+                  </ng-select>
+                  <!-- <input [formControl]="element.get('sectionName')" placeholder="section"> -->
+                  <mat-error *ngIf="element.get('sectionName')?.invalid">  
+                    <div *ngIf="element.get('sectionName').errors?.required && (element.get('sectionName').dirty || element.get('sectionName').touched)">This is required.</div>  
+                  </mat-error> 
+                </td>
               </ng-container>
 
               <ng-container matColumnDef="kmStart">
-                <th mat-header-cell *matHeaderCellDef >Km Start</th>
+                <th mat-header-cell *matHeaderCellDef >Km Start
+                  <button matSuffix mat-icon-button matTooltip="Enter KM Start in decimal format e.g. 10.00"> <mat-icon style="font-size:14px;">help_desk</mat-icon></button></th>
                     <td mat-cell *matCellDef="let element; let rowIdx = index;">
-                      <input type="text" [formControl]="element.get('kmStart')" placeholder="12.00" style="width: 90%;"> <mat-error *ngIf="element.get('kmStart')?.invalid">  
+                      <input type="text" [formControl]="element.get('kmStart')" placeholder="12.00" style="width: 90%;"> 
+                      <mat-error *ngIf="element.get('kmStart')?.invalid"> 
+                       
                         <div *ngIf="element.get('kmStart').errors?.required && (element.get('kmStart').dirty || element.get('kmStart').touched)">This is required.</div>  
                       </mat-error> 
                       <!-- <mat-error *ngIf="element.get('KmStart').errors?.pattern">Enter valid format.</mat-error> -->
@@ -80,7 +86,8 @@
               </ng-container>
 
               <ng-container matColumnDef="kmEnd">
-                <th mat-header-cell *matHeaderCellDef >Km End</th>
+                <th mat-header-cell *matHeaderCellDef >Km End
+                  <button matSuffix mat-icon-button matTooltip="Enter KM End in decimal format e.g. 10.00"> <mat-icon style="font-size:14px;">help_desk</mat-icon></button></th>
                   <td mat-cell *matCellDef="let element">
                     <input type="text" arrow-div [formControl]="element.get('kmEnd')" placeholder="12.00" style="width: 90%;">
                     <mat-error *ngIf="element.get('kmEnd')?.invalid">  
@@ -108,7 +115,7 @@
               <ng-container matColumnDef="add">
                 <th mat-header-cell *matHeaderCellDef>Add Row</th>
                     <td mat-cell *matCellDef="let element;let i=index;">
-                      <button arrow-div mat-button (click)="addextraRowsForKeymen(i)" style=" background-color: #09a0a0; border-radius: 20px; color: white;" mat-icon-button matTooltip="Add"> <mat-icon>add</mat-icon></button>
+                      <button arrow-div mat-button (click)="addextraRowsForKeymen(i)" style="background-color: #09a0a0; border-radius: 20px; color: white;" mat-icon-button matTooltip="Add"> <mat-icon>add</mat-icon></button>
                     </td>
               </ng-container>
             <td mat-cell *matCellDef="let element" [ngStyle]="{'display': 'none'}">

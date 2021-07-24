@@ -1,0 +1,159 @@
+<div class="content-section">
+  <div class="row">
+    <div class="col-md-12">
+      <mat-card class="beat-card-two">
+      <mat-card-content class="beat-card-content-two">
+        <form [formGroup]="patrolmenBeatForm">
+          <div class="row" style="margin-bottom:10px">
+            <div class="col-md-2">
+              <label><small>Please Select Season</small></label>
+              <ng-select placeholder="Please Select Season" [items]="season" [virtualScroll]="true" bindLabel="viewValue" bindValue="value" formControlName="seasonId" (change)="onSelection($event)">
+              </ng-select>
+            </div>
+
+            <div class="col-md-2" style="margin-bottom:10px">
+              <mat-form-field style="width: 100%">
+                <input type="search" matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-5" style="margin-bottom:10px; text-align: center;">
+              <strong style="font-size: 20px;">All Patrolmen Beats</strong>
+            </div>
+
+            <div class="col-md-3" style="margin-bottom:10px; float:right;">
+              <!-- <div class="row">
+                <div class="col-md-6"> -->
+                  <button mat-raised-button style="background: #09a0a0; color: white; float: right;">
+                    <a style="color: white;" [routerLink]="['/patrolmen-beat']">
+                    Add/Update Beat
+                    </a>
+                  </button>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+    </div>
+  </div>
+<mat-card class="example-card">
+  <mat-card-content  style="background: ghostwhite; margin-bottom: 40px;">
+    <div class="col-md-12">
+      <button class="btn-download float-right" matTooltip="Download in PDF" (click)="generatePdf()">
+        <i class="material-icons">cloud_download</i>
+      </button>
+    </div>
+    <div class="example-container mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="DeviceName">
+          <th mat-header-cell *matHeaderCellDef> Device Name </th>
+          <td mat-cell *matCellDef="let row"> {{row.deviceName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="KmStart">
+          <th mat-header-cell *matHeaderCellDef> Km Start </th>
+          <td mat-cell *matCellDef="let row"> {{row.kmStart}} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="KmEnd">
+          <th mat-header-cell *matHeaderCellDef >Km End</th>
+          <td mat-cell *matCellDef="let row"> {{row.kmEnd}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="SectionName">
+            <th mat-header-cell *matHeaderCellDef >Section Name</th>
+            <td mat-cell *matCellDef="let row"> {{row.sectionName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Trip-1">
+          <th mat-header-cell *matHeaderCellDef >Trip-1</th>
+          <td mat-cell *matCellDef="let row">
+            <span *ngIf="row.tripTime[0] ;else showTrip0;">{{row.tripTime[0].startTime.slice(0,-3)}}-{{row.tripTime[0].endTime.slice(0,-3)}}</span>
+            <ng-template #showTrip0>
+              <span> -- </span>
+          </ng-template>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Trip-2">
+          <th mat-header-cell *matHeaderCellDef >Trip-2</th>
+          <td mat-cell *matCellDef="let row">
+            <span *ngIf="row.tripTime[1] ;else showTrip1;"> {{row.tripTime[1].startTime.slice(0,-3)}}-{{row.tripTime[1].endTime.slice(0,-3)}} </span> 
+            <ng-template #showTrip0>
+              <span> -- </span>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Trip-3">
+          <th mat-header-cell *matHeaderCellDef >Trip-3</th>
+          <td mat-cell *matCellDef="let row">  
+            <span *ngIf="row.tripTime[2] ;else showTrip2;"> {{row.tripTime[2].startTime.slice(0,-3)}}-{{row.tripTime[2].endTime.slice(0,-3)}}</span>
+            <ng-template #showTrip2>
+              <span> -- </span>
+            </ng-template>
+           </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="Trip-4">
+          <th mat-header-cell *matHeaderCellDef >Trip-4</th>
+          <td mat-cell *matCellDef="let row"> 
+             <span *ngIf="row.tripTime[3] ;else showTrip3;"> 
+             {{row.tripTime[3].startTime.slice(0,-3)}}-{{row.tripTime[3].endTime.slice(0,-3)}}
+            </span>
+          <ng-template #showTrip3>
+            <span> -- </span>
+          </ng-template>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Trip-5">
+          <th mat-header-cell *matHeaderCellDef >Trip-5</th>
+          <td mat-cell *matCellDef="let row">
+            <span *ngIf="row.tripTime[4] ;else showTrip4;">{{row.tripTime[4].startTime.slice(0,-3)}}-{{row.tripTime[4].endTime.slice(0,-3)}}</span>
+            <ng-template #showTrip4>
+              <span> -- </span>
+          </ng-template>
+        </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Trip-6">
+          <th mat-header-cell *matHeaderCellDef >Trip-6</th>
+          <td mat-cell *matCellDef="let row"> 
+            <span *ngIf="row.tripTime[5] ;else showTrip5;">{{row.tripTime[5].startTime.slice(0,-3)}}-{{row.tripTime[5].endTime.slice(0,-3)}}</span>
+            <ng-template #showTrip5>
+              <span> -- </span>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Trip-7">
+          <th mat-header-cell *matHeaderCellDef >Trip-7</th>
+          <td mat-cell *matCellDef="let row"><span *ngIf="row.tripTime[6] ;else showTrip6;">{{row.tripTime[6].startTime.slice(0,-3)}}-{{row.tripTime[6].endTime.slice(0,-3)}}</span>
+            <ng-template #showTrip6>
+              <span> -- </span>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Trip-8">
+          <th mat-header-cell *matHeaderCellDef >Trip-8</th>
+          <td mat-cell *matCellDef="let row">  <span *ngIf="row.tripTime[7] ;else showTrip7;">{{row.tripTime[7].startTime.slice(0,-3)}}-{{row.tripTime[7].endTime.slice(0,-3)}}</span>
+            <ng-template #showTrip7>
+              <span> -- </span>
+            </ng-template>
+        </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="tableHeader;"></tr>
+        <tr mat-row *matRowDef="let row; columns: tableHeader;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[15,25,50,100,500]"></mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>
+<ngx-loading [show]="loading" [config]="{ animationType: ngxLoadingAnimationTypes.wanderingCubes, backdropBorderRadius: '3px'}" [template]="customLoadingTemplate"></ngx-loading>
+    <ng-template #customLoadingTemplate>
+    </ng-template>
+</div>

@@ -15,6 +15,18 @@
         <mat-error *ngIf="f.reportType.hasError('required')">Please Choose Report Type</mat-error>
       </mat-form-field>
       </div>
+      
+
+      <div class="myMatOptions">
+        <mat-form-field *ngIf="showselectExpectionReport">
+          <mat-select formControlName="selectExceptionReportType" backdropClass="repo-list" placeholder="Select Exception Report Type" (selectionChange)="getSelectedExceptionRepoType($event)" required disableOptionCentering>
+            <mat-option *ngFor="let elist of exceptionReportList" [value]="elist.ReportTypeFilterName">{{elist.ReportTypeFilterTitle}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="reportForm.get('selectExceptionReportType').hasError('required')">Please Choose Exception Report Type</mat-error>
+        </mat-form-field>
+      </div>
+
+      
       <div class="myMatOptions">
         <mat-form-field *ngIf="showExceptionRepoType">
           <mat-select  formControlName="exceptionReportType" backdropClass="repo-list" placeholder="Select Exception Report Type" (selectionChange)="getExceptionRepoType($event)" required disableOptionCentering>

@@ -32,6 +32,9 @@ import { AllKeymenExistingBeatComponent } from '../beat-module/all-keymen-existi
 import { UtilityModuleComponent } from '../utility-module/utility-module.component';
 import { PatrolmenSingleBeatComponent } from '../patrolmen-single-beat/patrolmen-single-beat.component';
 import { AllKeymenExistingBeatsComponent } from '../beat-module/all-keymen-existing-beats/all-keymen-existing-beats.component';
+import { KeymenVideoLinkComponent } from '../beat-module/keymen-video-link/keymen-video-link.component';
+import { AllPatrolmenExistingBeatsComponent } from '../beat-module/all-patrolmen-existing-beats/all-patrolmen-existing-beats.component';
+import { AllVideosPageComponent } from '../all-videos-page/all-videos-page.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -61,6 +64,9 @@ const routes: Routes = [
   { path: 'utility-module', component: UtilityModuleComponent, canActivate:[AuthGuard] },
   { path: 'patrolmen-single-beat', component: PatrolmenSingleBeatComponent, canActivate:[AuthGuard] },
   { path: 'all-keymen-beats', component: AllKeymenExistingBeatsComponent, canActivate:[AuthGuard] },
+  { path: 'all-patrolmen-beat', component: AllPatrolmenExistingBeatsComponent, canActivate:[AuthGuard] },
+  { path: 'keymen-demo', component: KeymenVideoLinkComponent, canActivate:[AuthGuard] },
+  { path: 'demo-videos', component: AllVideosPageComponent, canActivate:[AuthGuard] },
   { path: 'offline', component: OfflineComponent},
   { path: '', component : LoginComponent},
    // otherwise redirect to home

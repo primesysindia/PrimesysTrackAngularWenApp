@@ -5,35 +5,34 @@ import { BeatServicesService } from '../../services/beat-services.service';
 import { Message } from 'src/app/core/message.model';
 import { Subject } from 'rxjs';
 import { HistoryNotFoundComponent } from '../../dialog/history-not-found/history-not-found.component';
-import { FormArray, FormGroup, FormControl,FormBuilder, Validators} from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { getPatrolmenBeats} from '../../core/beatInfo.model';
+import { FormArray, FormGroup, FormControl,FormBuilder, Validators} from '@angular/forms';
 import { PdfServiceService } from '../../services/pdf-service.service';
 import { DatePipe } from 'node_modules/@angular/common';
 declare let pdfMake: any ;
 
+
 @Component({
-  selector: 'app-pateolmen-beat-status',
-  templateUrl: './pateolmen-beat-status.component.html',
-  styleUrls: ['./pateolmen-beat-status.component.css']
+  selector: 'app-all-patrolmen-existing-beats',
+  templateUrl: './all-patrolmen-existing-beats.component.html',
+  styleUrls: ['./all-patrolmen-existing-beats.component.css']
 })
-export class PateolmenBeatStatusComponent implements OnInit {
+export class AllPatrolmenExistingBeatsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  private ngUnsubscribe: Subject<any> = new Subject();
+   private ngUnsubscribe: Subject<any> = new Subject();
   public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
-  tableHeader: Array<string> = ['DeviceName', 'KmStart', 'KmEnd', 'SectionName','Trip-1', 'Trip-2', 'Trip-3', 'Trip-4', 'Trip-5', 'Trip-6', 'Trip-7', 'Trip-8', 'status','VerificationDate'];
-  
-  // ['DeviceName', 'KmStart', 'KmEnd', 'SectionName', 'status','VerificationDate'];
-  // 'start_time1','end_time1', 'start_time2','end_time2', 'start_time3','end_time3', 'start_time4','end_time4', 'start_time5','end_time5', 'start_time6','end_time6', 'start_time7','end_time7', 'start_time8','end_time8',
-  dataSource :any = [];
+  tableHeader: Array<string> = ['DeviceName', 'KmStart', 'KmEnd', 'SectionName','Trip-1', 'Trip-2', 'Trip-3', 'Trip-4', 'Trip-5', 'Trip-6', 'Trip-7', 'Trip-8'];
+  dataSource : MatTableDataSource<getPatrolmenBeats>;
   loading: any;
   currUser: any;
   parId: any;
+  response: any;
+  responseData: any;
+  showPatrolmen: boolean = false;
+  showKeymen: boolean = false;
   seasonId: any;
   patrolmenBeatForm: FormGroup;
-  responseData: any;
-  response: any;
-
   season = [
     {value: '1', viewValue: 'Summer'},
     {value: '2', viewValue: 'Rainy'},
@@ -41,7 +40,7 @@ export class PateolmenBeatStatusComponent implements OnInit {
   ];
 
   constructor(private beatService: BeatServicesService,
-    public dialog: MatDialog,private pdfService: PdfServiceService, private fb: FormBuilder,private datePipe: DatePipe) { }
+    public dialog: MatDialog,private fb: FormBuilder) { }
 
   ngOnInit() {
     this.patrolmenBeatForm = this.fb.group({ 
@@ -51,38 +50,11 @@ export class PateolmenBeatStatusComponent implements OnInit {
     this.parId = this.currUser.usrId;
     this.loading = true;
     var season = 1;
-    this.beatService.getPatrolmenExistingBeatByParent(this.parId, season)
-    .takeUntil(this.ngUnsubscribe)
-    .subscribe((data: Array<getPatrolmenBeats>) => {
-      if(data.length == 0){
-        this.loading = false;
-        const dialogConfig = new MatDialogConfig();
-        //pass data to dialog
-        dialogConfig.data = {
-          hint: 'beatNotFound'
-        };
-        const dialogRef = this.dialog.open(HistoryNotFoundComponent, dialogConfig)
-      }
-      else {
-        this.responseData = data;
-        this.response = new MatTableDataSource<getPatrolmenBeats>(this.responseData);
-        // console.log("this", this.responseData)
-        this.dataSource = data;
-        this.dataSource.paginator = this.paginator;
-      } 
-      this.loading = false;
-    })
-  }
-
-  onSelection(event) {
-    this.dataSource = [];
-    this.seasonId = event.value;
-    this.loading = true;
-    this.beatService.getPatrolmenExistingBeatByParent(this.parId, this.seasonId)
+    this.beatService.getPatrolmenExistingBeat(this.parId, season)
     .takeUntil(this.ngUnsubscribe)
     .subscribe((data: Array<getPatrolmenBeats>) => {
       // console.log("data", data)
-      if(data.length == 0){
+      if(data.length==0){
         this.loading = false;
         const dialogConfig = new MatDialogConfig();
         //pass data to dialog
@@ -94,18 +66,51 @@ export class PateolmenBeatStatusComponent implements OnInit {
       else {
         this.responseData = data;
         this.response = new MatTableDataSource<getPatrolmenBeats>(this.responseData);
-        // console.log("this", this.responseData)
-        this.dataSource = data;
+        this.dataSource = this.response;
         this.dataSource.paginator = this.paginator;
+        // console.log("this", this.dataSource)
       } 
       this.loading = false;
-    })
+  })
+  }
+
+  onSelection(event) {
+    this.seasonId = event.value;
+    this.loading = true;
+    this.beatService.getPatrolmenExistingBeat(this.parId, this.seasonId)
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe((data: Array<getPatrolmenBeats>) => {
+      // console.log("data", data)
+      if(data.length==0){
+        this.loading = false;
+        const dialogConfig = new MatDialogConfig();
+        //pass data to dialog
+        dialogConfig.data = {
+          hint: 'beatNotFound'
+        };
+        const dialogRef = this.dialog.open(HistoryNotFoundComponent, dialogConfig)
+      }
+      else {
+        this.responseData = data;
+        this.response = new MatTableDataSource<getPatrolmenBeats>(this.responseData);
+        this.dataSource = this.response;
+        this.dataSource.paginator = this.paginator;
+        // console.log("this", this.dataSource)
+      } 
+      this.loading = false;
+  })
+  }
+
+   applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    this.dataSource.filter = filterValue;
   }
 
   generatePdf() {
-    // console.log(pdfMake);
+   
     const documentDefinition = this.getDocumentDefinition();
-    pdfMake.createPdf(documentDefinition).download('Patrolmen Beats');
+    pdfMake.createPdf(documentDefinition).download('All Patrolmen Beats');
     // pdfMake.createPdf(documentDefinition).open();
   }
 
@@ -118,7 +123,7 @@ export class PateolmenBeatStatusComponent implements OnInit {
           alignment : 'left'
         },
         {
-          text: 'BEAT STATUS' ,
+          text: 'ALL PATROLMEN BEAT' ,
           bold: true,
           fontSize: 14,
           alignment: 'center',
@@ -173,7 +178,7 @@ export class PateolmenBeatStatusComponent implements OnInit {
       fontSize: 8,
       alignment: 'center',
       table: {
-        widths: [50,30,30,30,30,30,30,30,30,30,30,30,30],
+        widths: [50,30,30,30,35,35,35,35,35,35,35,35],
         
          headerRows: 1,
         body: [
@@ -225,10 +230,7 @@ export class PateolmenBeatStatusComponent implements OnInit {
             text: 'Trip-8',
             style: 'tableHeader'
           },
-          {
-            text: 'Approval Date',
-            style: 'tableHeader'
-          },
+         
           ],
           ...beats.map(beat => {
             return ([
@@ -241,7 +243,6 @@ export class PateolmenBeatStatusComponent implements OnInit {
               beat.tripTime[5] ? beat.tripTime[5].startTime.slice(0,-3)  + '-' + beat.tripTime[5].endTime.slice(0,-3) : '--',
               beat.tripTime[6] ? beat.tripTime[6].startTime.slice(0,-3)  + '-' + beat.tripTime[6].endTime.slice(0,-3) : '--',
               beat.tripTime[7] ? beat.tripTime[7].startTime.slice(0,-3)  + '-' + beat.tripTime[7].endTime.slice(0,-3) : '--',
-              beat.ApprovedDate ? this.datePipe.transform(beat.ApprovedDate, 'MMM d, y') : '--',
             ]); 
           }),
         ]
@@ -249,10 +250,4 @@ export class PateolmenBeatStatusComponent implements OnInit {
     };
   }
 
-  ngOnDestroy(): void{
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
 }
-
-

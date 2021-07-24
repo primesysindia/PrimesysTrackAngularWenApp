@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class GetDeviceService {
-
+localApi : any = 'http://123.252.246.214:8080/TrackingAppDB/TrackingAPP/';
   constructor(private http: HttpClient, private logServ: LoginService) { }
 
   getAllDeviceList(userId){
@@ -39,7 +39,7 @@ export class GetDeviceService {
      let params = new HttpParams()
     .set('ParentId', userId)
 
-    return this.http.post(this.logServ.apiUrl+'UserServiceAPI/GetOptimizedAllDeviceLocation', params, options)
+    return this.http.post(this.logServ.apiUrl +'UserServiceAPI/GetOptimizedAllDeviceLocation', params, options)
     .pipe(
       //retry upto 3 times after getting error from server
       retryWhen((error:any) => {
@@ -59,7 +59,7 @@ export class GetDeviceService {
   // console.log("paarams", params)
 
   var res = this.http.post(this.logServ.apiUrl + 'AdminDashboardServiceApi/GetRailwayPetrolmanTripsMaster', params, options) 
-  // console.log("res", res)
+  // console.log("res", res) 
   return res .pipe(
     //retry upto 3 times after getting error from server
     retryWhen((error:any) => {

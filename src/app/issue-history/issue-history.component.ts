@@ -42,7 +42,6 @@ export class IssueHistoryComponent implements OnInit {
     this.loading = true;
     this.issueService.getAllIssueHistory().subscribe((res: Array<IssueList>)=> {
       this.loading = false;
-      // console.log("isse", res)
       if(res.length == 0){
         this.loading = false;
         const dialogConfig = new MatDialogConfig();

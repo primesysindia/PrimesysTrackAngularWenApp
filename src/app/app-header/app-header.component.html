@@ -21,8 +21,11 @@
             </i>
             Reports
           </a>
-
+          
           <a class="btn" [routerLink]="['/utility-module']" routerLinkActive="active" (click)="onMenuClick()">
+            <i class="material-icons icons">
+              library_add
+            </i>
             Utility
           </a>
 
@@ -77,12 +80,18 @@
                 </i>
                 Feedback
               </a>
-              <!-- <a class="dropdown-item" [routerLink]="['/issue-logging']" routerLinkActive="active" (click)="onMenuClick()">
+               <a class="dropdown-item" [routerLink]="['/demo-videos']" routerLinkActive="active" (click)="onMenuClick()">
+                <!-- <i class="material-icons icons">
+                  sms
+                </i> -->
+                How to Use Portal?
+              </a>
+              <a class="dropdown-item" [routerLink]="['/issue-logging']" routerLinkActive="active" (click)="onMenuClick()">
                 <i class="material-icons icons">
                   sms
                 </i>
                 Issue Register
-              </a> -->
+              </a>
               <a class="dropdown-item" [routerLink]="['']" (click)="doLogout()" (click)="onMenuClick()">
                   <i class="material-icons icons">
                     all_out

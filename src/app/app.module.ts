@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ToastrModule } from 'ngx-toastr';
+// import { ToastrModule } from 'ngx-toastr';
 import { LoginComponent } from './login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CustomMaterialModule } from './core/material.module';
@@ -81,6 +81,12 @@ import { AllKeymenExistingBeatComponent } from './beat-module/all-keymen-existin
 import { UtilityModuleComponent } from './utility-module/utility-module.component';
 import { PatrolmenSingleBeatComponent } from './patrolmen-single-beat/patrolmen-single-beat.component';
 import { AllKeymenExistingBeatsComponent } from './beat-module/all-keymen-existing-beats/all-keymen-existing-beats.component';
+import { BeatExcelService } from './services/beat-excel.service';
+import { PdfServiceService } from './services/pdf-service.service';
+import { FormDirective } from './form.directive';
+import { KeymenVideoLinkComponent } from './beat-module/keymen-video-link/keymen-video-link.component';
+import { AllPatrolmenExistingBeatsComponent } from './beat-module/all-patrolmen-existing-beats/all-patrolmen-existing-beats.component';
+import { AllVideosPageComponent } from './all-videos-page/all-videos-page.component';
 
 @NgModule({
   declarations: [
@@ -132,7 +138,11 @@ import { AllKeymenExistingBeatsComponent } from './beat-module/all-keymen-existi
     AllKeymenExistingBeatComponent,
     UtilityModuleComponent,
     PatrolmenSingleBeatComponent,
-    AllKeymenExistingBeatsComponent
+    AllKeymenExistingBeatsComponent,
+    FormDirective,
+    KeymenVideoLinkComponent,
+    AllPatrolmenExistingBeatsComponent,
+    AllVideosPageComponent
   ],
   imports: [
     BrowserModule,
@@ -157,7 +167,7 @@ import { AllKeymenExistingBeatsComponent } from './beat-module/all-keymen-existi
     SlimLoadingBarModule,
     NgSelectModule,
     OrderModule,
-    ToastrModule.forRoot()
+    // ToastrModule.forRoot()
   ],
   providers: [
     LoginService,
@@ -174,7 +184,9 @@ import { AllKeymenExistingBeatsComponent } from './beat-module/all-keymen-existi
     PaymentService,
     FeedbackService,
     TaskManagementService,
-    IssueLoggingService
+    IssueLoggingService,
+    BeatExcelService,
+    PdfServiceService
   ],
   entryComponents: [
     UpdateTaskDialogComponent,
